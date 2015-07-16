@@ -411,6 +411,7 @@
 				D3052D381B50FE39002449D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D3052D391B50FE39002449D8 /* Build configuration list for PBXNativeTarget "imagepickerTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +420,7 @@
 				D3052D3B1B50FE39002449D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
