@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class SentViewController: UIViewController {

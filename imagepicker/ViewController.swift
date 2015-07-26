@@ -8,6 +8,7 @@
 
 import UIKit
 
+// TODO: have a right side navbar menu with possible items: save, delete, share
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
@@ -16,7 +17,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var topText: UITextField!
 	@IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var memeCanvas: UIView!
+	@IBOutlet weak var saveButton: UIBarButtonItem!
 
+
+	var meme: Meme?
     let textFieldToImageBorderMargin = CGFloat(10)
     var memeCanvasDefaultCenterY: CGFloat?
     var activeTextField: UITextField?
@@ -44,7 +48,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
     override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+
 		if let image = imageView.image {
+			navigationItem.rightBarButtonItems = [saveButton]
 			setTextFieldsHidden(false)
 			setTextFieldsConstraints()
 		} else {
@@ -53,12 +60,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
 	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
 		// When the text in a textbox shrinks, the views are layed out again, and it may be necessary to
 		// reposition the view to ensure that the text field remains visible.
 		ensureTextFieldVisible()
 	}
 
 	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
 		// Record the original center position; this will be useful for calculating the amount to move the view when
 		// the keyboard appears, changes size, and disappears.
 		if memeCanvasDefaultCenterY == nil {
@@ -153,6 +162,34 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         picker.sourceType = UIImagePickerControllerSourceType.Camera
         self.presentViewController(picker, animated: true, completion: nil)
     }
+
+	@IBAction func saveMeme(sender: UIBarButtonItem) {
+		let memeList = MemeList.sharedInstance
+		if let meme = meme {
+			meme.topText = topText.text
+			meme.bottomText = bottomText.text
+		} else {
+			meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
+			memeList.list.append(meme!)
+		}
+		if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
+			if !meme.persistImages(original, memeImage: memeImage) {
+				println("Unable to persist images")
+			}
+		}
+		memeList.persist()
+	}
+
+	func memeAsImage() -> UIImage? {
+		if let image = imageView.image {
+			UIGraphicsBeginImageContextWithOptions(memeCanvas.bounds.size, memeCanvas.opaque, 0.0)
+			memeCanvas.drawViewHierarchyInRect(memeCanvas.bounds, afterScreenUpdates: false)
+			let image = UIGraphicsGetImageFromCurrentImageContext()
+			UIGraphicsEndImageContext()
+			return image
+		}
+		return nil
+	}
 
 	/**
 	If necessary, repositions the memeCanvas view so that the currently active text field is visible.

@@ -6,13 +6,19 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-class MemeInfo: NSObject, NSCoding {
+class  Meme: NSObject, NSCoding {
 	var id: String?
 	var topText: String
 	var bottomText: String
+
+	enum ResourceType: String {
+		case Source = "source"
+		case Meme = "meme"
+		case MemeThumbnail = "meme-thumbnail"
+		case Texts = "texts"
+	}
 
 	init(var id: String? = nil, topText: String = "", bottomText: String = "") {
 		if id == nil {
@@ -21,6 +27,7 @@ class MemeInfo: NSObject, NSCoding {
 		self.id = id
 		self.topText = topText
 		self.bottomText = bottomText
+		super.init()
 	}
 
 	required convenience init(coder decoder: NSCoder) {
@@ -37,20 +44,6 @@ class MemeInfo: NSObject, NSCoding {
 		coder.encodeObject(bottomText, forKey: "bottomText")
 	}
 
-}
-
-struct Meme {
-	var info: MemeInfo
-
-	enum ResourceType: String {
-		case Source = "source"
-		case Meme = "meme"
-		case MemeThumbnail = "meme-thumbnail"
-		case Texts = "texts"
-	}
-
-
-
 	func image(type: ResourceType) -> UIImage?
 	{
 		if let name = imageNameForType(type) {
@@ -60,14 +53,14 @@ struct Meme {
 	}
 
 	func imageNameForType(type: ResourceType) -> String? {
-		if let id = info.id {
+		if let id = id {
 			return id + "-" + type.rawValue + ".png"
 		}
 		println("id is currently nil")
 		return nil
 	}
 
-	func persistImages(#topText: String, bottomText: String, originalImage: UIImage, memeImage: UIImage, id: String?) -> Bool {
+	func persistImages(originalImage: UIImage, memeImage: UIImage) -> Bool {
 		if let url = resourceURL {
 			return (
 				saveImage(originalImage, ofType: .Source, withBaseUrl: url) &&
@@ -94,9 +87,10 @@ struct Meme {
 	}
 
 	var resourceURL: NSURL? {
-		if let id = info.id {
-			let bundleURL = NSBundle.mainBundle().bundleURL
-			let resourceURL = bundleURL.URLByAppendingPathComponent("Documents/" + id, isDirectory: true)
+		if let id = id {
+
+			let documentURL = documentDirectoryURL()
+			let resourceURL = documentURL.URLByAppendingPathComponent(id, isDirectory: true)
 			var error: NSError?
 			// Try to create the directory, if it doesn't already exist:
 			NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil, error: &error)
@@ -116,7 +110,7 @@ struct Meme {
 			var error: NSError?
 			NSFileManager.defaultManager().removeItemAtURL(url, error: &error)
 			if let err = error {
-				println("Error trying to remove resources for id '\(info.id)': \(err)")
+				println("Error trying to remove resources for id '\(id)': \(err)")
 			} else {
 				return true
 			}

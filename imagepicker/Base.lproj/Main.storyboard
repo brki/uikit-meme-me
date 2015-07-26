@@ -90,7 +90,7 @@
                                     <constraint firstItem="xQe-OL-RLp" firstAttribute="leading" secondItem="Xx2-Of-htz" secondAttribute="leading" id="eL0-Jj-hDf"/>
                                 </constraints>
                             </view>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="800" translatesAutoresizingMaskIntoConstraints="NO" id="5TV-2a-5FG">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="800" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5TV-2a-5FG">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
                                     <barButtonItem title="Library" id="ixo-q8-cTQ">
@@ -117,11 +117,20 @@
                             <constraint firstAttribute="trailing" secondItem="Xx2-Of-htz" secondAttribute="trailing" id="wMt-zz-toF"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Save" id="5ek-7p-YAw">
+                            <connections>
+                                <action selector="saveMeme:" destination="BYZ-38-t0r" id="J5N-Ov-Qdb"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bottomText" destination="nfp-8X-hEb" id="lnj-tE-2Cc"/>
                         <outlet property="imageView" destination="xQe-OL-RLp" id="tpV-ei-lbz"/>
                         <outlet property="memeCanvas" destination="Xx2-Of-htz" id="isP-KT-Dw0"/>
                         <outlet property="photoButton" destination="q3t-z9-WgH" id="CNf-jt-RLc"/>
+                        <outlet property="saveButton" destination="5ek-7p-YAw" id="G6f-Mf-iWB"/>
                         <outlet property="topText" destination="4Yk-aA-IlV" id="uc4-eq-03s"/>
                     </connections>
                 </viewController>
