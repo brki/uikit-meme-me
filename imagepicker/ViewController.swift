@@ -21,6 +21,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var memeCanvasDefaultCenterY: CGFloat?
     var activeTextField: UITextField?
 	var textFieldConstraints = [NSLayoutConstraint]()
+	var keyboardHeight: CGFloat = 0 {
+		didSet {
+			ensureTextFieldVisible()
+		}
+	}
 
     enum TextFieldPosition {
         case Top, Bottom
@@ -47,8 +52,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		}
     }
 
+	override func viewDidLayoutSubviews() {
+		// When the text in a textbox shrinks, the views are layed out again, and it may be necessary to
+		// reposition the view to ensure that the text field remains visible.
+		ensureTextFieldVisible()
+	}
+
 	override func viewDidAppear(animated: Bool) {
-		// Note the original center position; this will be useful for calculating the amount to move the view when
+		// Record the original center position; this will be useful for calculating the amount to move the view when
 		// the keyboard appears, changes size, and disappears.
 		if memeCanvasDefaultCenterY == nil {
 			memeCanvasDefaultCenterY = memeCanvas.center.y
@@ -66,7 +77,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	*/
 	func setTextFieldsConstraints() {
 		NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
-		// TODO: make that imageMargins -> (horizontal, vertical)
 		let (scale, scaledSize, vMargin, hMargin) = scaledImageDetails()
 		let verticalInset = vMargin + 4
 		let textFieldWidth = scaledSize.width - 4
@@ -105,6 +115,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		return (1, CGSize(width: 1, height: 1), 0, 0)
 	}
 
+	/**
+	The scale that has been applied to the image to fit in the image view
+	*/
     var imageScale: CGFloat {
 		if let image = imageView.image {
 			let verticalRatio = imageView.frame.size.height / image.size.height
@@ -112,7 +125,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 			// If either ratio is < 1, the image will be scaled to the smaller of the two ratios.
 			return min(1, min(verticalRatio, horizontalRatio))
 		}
-		// If no image no scaling is done.
+		// If no image no scaling is done:
 		return 1
     }
 
@@ -141,6 +154,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.presentViewController(picker, animated: true, completion: nil)
     }
 
+	/**
+	If necessary, repositions the memeCanvas view so that the currently active text field is visible.
+
+	Note that this is called whenever the keyboardHeight property changes.
+	*/
+	func ensureTextFieldVisible() {
+		if let textField = activeTextField, let defaultY = memeCanvasDefaultCenterY {
+			let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
+			let keyboardTopY = view.frame.size.height - keyboardHeight
+			if keyboardTopY < textFieldBottomY {
+				memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
+			}
+		}
+	}
+	
+	// MARK: UIImagePickerControllerDelegate methods:
+
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.imageView.image = image
@@ -153,7 +183,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dismissViewControllerAnimated(true, completion: nil)
     }
 
-    // UITextFieldDelegate methods:
+    // MARK: UITextFieldDelegate methods:
+
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         activeTextField = nil
@@ -164,9 +195,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         activeTextField = textField
     }
 
-    // Keyboard hide/show notification handlers:
+    // MARK: Keyboard hide/show notification handlers:
+	
     func keyboardWasShown(notification: NSNotification) {
-        ensureTextFieldVisible(keyboardHeight(notification))
+		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+			keyboardHeight = keyboardSize.height
+		} else {
+			keyboardHeight = 0
+		}
     }
 
     func keyboardWillHide(notification: NSNotification) {
@@ -175,23 +211,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 				memeCanvas.center.y = y
 			}
 		}
-    }
-
-    func keyboardHeight(notification: NSNotification) -> CGFloat {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            return keyboardSize.height
-        }
-        return 0
-    }
-
-    func ensureTextFieldVisible(keyboardHeight: CGFloat) {
-        if let textField = activeTextField, let defaultY = memeCanvasDefaultCenterY {
-			let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
-			let keyboardTopY = view.frame.size.height - keyboardHeight
-			if keyboardTopY < textFieldBottomY {
-				memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
-			}
-		}
+		keyboardHeight = 0
     }
 }
-
