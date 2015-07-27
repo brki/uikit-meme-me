@@ -230,6 +230,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     func textFieldDidBeginEditing(textField: UITextField) {
         activeTextField = textField
+
+		// Clear the text if it's still the default text:
+		if (textField == topText && textField.text == "TOP") || (textField == bottomText && textField.text == "BOTTOM") {
+			textField.text = ""
+		}
     }
 
     // MARK: Keyboard hide/show notification handlers:
