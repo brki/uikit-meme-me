@@ -9,6 +9,7 @@
 import UIKit
 
 // TODO perhaps: Disable or remove save button if nothing has changed.
+// TODO perhaps: Always show, but disable or enable trash button.
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
@@ -90,7 +91,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 			var rightButtons = [saveButton, shareButton]
 			if let meme = meme {
 				if meme.id != nil {
-					rightButtons.append(trashButton)
+					rightButtons.insert(trashButton, atIndex: 1)
 				}
 			}
 			navigationItem.rightBarButtonItems = rightButtons
