@@ -8,7 +8,7 @@
 
 import UIKit
 
-// TODO: have a right side navbar menu with possible items: save, delete, share
+// TODO perhaps: Disable or remove save button if nothing has changed.
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
@@ -18,7 +18,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	@IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var memeCanvas: UIView!
 	@IBOutlet weak var saveButton: UIBarButtonItem!
-
+	@IBOutlet weak var shareButton: UIBarButtonItem!
+	@IBOutlet weak var trashButton: UIBarButtonItem!
 
 	var meme: Meme?
     let textFieldToImageBorderMargin = CGFloat(10)
@@ -47,11 +48,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
 
+	/**
+	Ensure that the appropriate elements are shown or hidden, and that the text fields are appropriately sized,
+	depending on whether or not an image is present, and whether or not the meme has already been saved.
+	*/
     override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
+		setRightBarButtonItems()
 		if let image = imageView.image {
-			navigationItem.rightBarButtonItems = [saveButton]
 			setTextFieldsHidden(false)
 			setTextFieldsConstraints()
 		} else {
@@ -78,6 +83,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	func setTextFieldsHidden(hidden: Bool) {
 		topText.hidden = hidden
 		bottomText.hidden = hidden
+	}
+
+	func setRightBarButtonItems() {
+		if let image = imageView.image {
+			var rightButtons = [saveButton, shareButton]
+			if let meme = meme {
+				if meme.id != nil {
+					rightButtons.append(trashButton)
+				}
+			}
+			navigationItem.rightBarButtonItems = rightButtons
+		} else {
+			navigationItem.rightBarButtonItems = nil
+		}
 	}
 
 	/**
@@ -138,6 +157,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		return 1
     }
 
+	/**
+	Style the text fields.
+	*/
     func setDefaultTextAttributes() {
         var memeTextAttributes = self.topText.defaultTextAttributes
         memeTextAttributes[NSFontAttributeName] = UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)
@@ -164,22 +186,46 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
 	@IBAction func saveMeme(sender: UIBarButtonItem) {
+		persistMeme()
+	}
+
+	@IBAction func ShareMeme(sender: UIBarButtonItem) {
+		persistMeme()
+	}
+	
+	@IBAction func deleteMeme(sender: UIBarButtonItem) {
+		if let meme = meme {
+			if let id = meme.id {
+				MemeList.sharedInstance.removeMeme(meme)
+			}
+		}
+	}
+
+	/**
+	Saves the meme: writes the images and text to persistent storage.
+	*/
+	func persistMeme() {
 		let memeList = MemeList.sharedInstance
 		if let meme = meme {
 			meme.topText = topText.text
 			meme.bottomText = bottomText.text
 		} else {
 			meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
-			memeList.list.append(meme!)
 		}
 		if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
-			if !meme.persistImages(original, memeImage: memeImage) {
+			if meme.persistImages(original, memeImage: memeImage) {
+				memeList.saveMeme(meme)
+				// Perhaps a trash icon needs to be added:
+				setRightBarButtonItems()
+			} else {
 				println("Unable to persist images")
 			}
 		}
-		memeList.persist()
 	}
 
+	/**
+	Captures the memeCanvas (scaled image and text fields) as an image.
+	*/
 	func memeAsImage() -> UIImage? {
 		if let image = imageView.image {
 			UIGraphicsBeginImageContextWithOptions(memeCanvas.bounds.size, memeCanvas.opaque, 0.0)

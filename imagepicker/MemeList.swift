@@ -16,32 +16,16 @@ class MemeList {
 	static let dataFile = "memeList.data"
 	static let sharedInstance = MemeList()
 
+	/**
+	The url of the persistent data file.
+    */
 	var dataURL: NSURL {
 		return documentDirectoryURL().URLByAppendingPathComponent(MemeList.dataFile)
 	}
 
-	subscript(id: String) -> Meme? {
-		get {
-			for meme in list {
-				if meme.id == id {
-					return meme
-				}
-			}
-			return nil
-		}
-		set {
-			if let value = newValue {
-				for (i, meme) in enumerate(list) {
-					if meme.id == value.id {
-						list[i] = value
-						return
-					}
-				}
-				list.append(value)
-			}
-		}
-	}
-
+	/**
+	Load the persisted Memes into memory from storage.
+    */
 	init() {
 		let dataUrl = dataURL
 		if NSFileManager.defaultManager().fileExistsAtPath(dataURL.path!) {
@@ -57,6 +41,9 @@ class MemeList {
 		}
 	}
 
+	/**
+	Persists the in-memory list of Memes to storage.
+	*/
 	func persist() {
 		let dataUrl = dataURL
 		let data = NSMutableData()
@@ -67,6 +54,47 @@ class MemeList {
 		}
 		coder.finishEncoding()
 		data.writeToURL(dataUrl, atomically: true)
+	}
+
+	/**
+	Saves the provided meme to persistent storage.
+	*/
+	func saveMeme(meme: Meme) {
+		if let index = indexOfMeme(meme) {
+			list[index] = meme
+		} else {
+			list.append(meme)
+		}
+		persist()
+	}
+
+	/**
+	Remove the given meme from persistent storage.
+	
+	This also calls meme.removePersistedData()
+    */
+	func removeMeme(meme: Meme) {
+		if let index = indexOfMeme(meme) {
+			meme.removePersistedData()
+			list.removeAtIndex(index)
+			persist()
+		}
+	}
+
+	/**
+	Find the index in self.list of the given meme.
+	
+	:returns: Int index, or nil if not found
+	*/
+	func indexOfMeme(meme: Meme) -> Int? {
+		if let id = meme.id {
+			for (index, storedMeme) in enumerate(list) {
+				if storedMeme.id! == id {
+					return index
+				}
+			}
+		}
+		return nil
 	}
 
 }

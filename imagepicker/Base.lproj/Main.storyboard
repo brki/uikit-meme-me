@@ -118,9 +118,19 @@
                         </constraints>
                     </view>
                     <toolbarItems>
-                        <barButtonItem title="Save" id="5ek-7p-YAw">
+                        <barButtonItem systemItem="save" id="5ek-7p-YAw">
                             <connections>
                                 <action selector="saveMeme:" destination="BYZ-38-t0r" id="J5N-Ov-Qdb"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem systemItem="action" id="fZL-Rc-qwO" userLabel="Share">
+                            <connections>
+                                <action selector="ShareMeme:" destination="BYZ-38-t0r" id="tEI-dn-ESf"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem systemItem="trash" id="o22-fc-NNB">
+                            <connections>
+                                <action selector="deleteMeme:" destination="BYZ-38-t0r" id="CL0-GY-X8M"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -131,7 +141,9 @@
                         <outlet property="memeCanvas" destination="Xx2-Of-htz" id="isP-KT-Dw0"/>
                         <outlet property="photoButton" destination="q3t-z9-WgH" id="CNf-jt-RLc"/>
                         <outlet property="saveButton" destination="5ek-7p-YAw" id="G6f-Mf-iWB"/>
+                        <outlet property="shareButton" destination="fZL-Rc-qwO" id="MBh-hA-iHe"/>
                         <outlet property="topText" destination="4Yk-aA-IlV" id="uc4-eq-03s"/>
+                        <outlet property="trashButton" destination="o22-fc-NNB" id="eL8-Pp-oQC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

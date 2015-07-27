@@ -20,6 +20,28 @@ class  Meme: NSObject, NSCoding {
 		case Texts = "texts"
 	}
 
+	/**
+	Provides the URL of the directory to use for storing images for the current meme.
+	*/
+	var resourceURL: NSURL? {
+		if let id = id {
+
+			let documentURL = documentDirectoryURL()
+			let resourceURL = documentURL.URLByAppendingPathComponent(id, isDirectory: true)
+			var error: NSError?
+			// Try to create the directory, if it doesn't already exist:
+			NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil, error: &error)
+			if let err = error {
+				println("Unable to create directory for resource contents. Error: \(err.localizedDescription)")
+			} else {
+				return resourceURL
+			}
+		} else {
+			println("Can not provide URL for Meme that has no id")
+		}
+		return nil
+	}
+
 	init(var id: String? = nil, topText: String = "", bottomText: String = "") {
 		if id == nil {
 			id = NSUUID().UUIDString
@@ -30,6 +52,9 @@ class  Meme: NSObject, NSCoding {
 		super.init()
 	}
 
+	/**
+	NSCoding init()
+	*/
 	required convenience init(coder decoder: NSCoder) {
 		self.init(
 			id: decoder.decodeObjectForKey("id") as! String?,
@@ -38,12 +63,18 @@ class  Meme: NSObject, NSCoding {
 		)
 	}
 
+	/**
+	NSCoding encodeWithCoder()
+	*/
 	func encodeWithCoder(coder: NSCoder) {
 		coder.encodeObject(id, forKey: "id")
 		coder.encodeObject(topText, forKey: "topText")
 		coder.encodeObject(bottomText, forKey: "bottomText")
 	}
 
+	/**
+	Fetches the image
+	*/
 	func image(type: ResourceType) -> UIImage?
 	{
 		if let name = imageNameForType(type) {
@@ -52,6 +83,8 @@ class  Meme: NSObject, NSCoding {
 		return nil
 	}
 
+	/**
+	*/
 	func imageNameForType(type: ResourceType) -> String? {
 		if let id = id {
 			return id + "-" + type.rawValue + ".png"
@@ -60,6 +93,17 @@ class  Meme: NSObject, NSCoding {
 		return nil
 	}
 
+	/**
+	Persists the original image, the meme image, and meme thumbnail image.
+	
+	The persisted images are stored together in a directory specific to this meme.
+	For example, if the meme.id == "foo", then this will result in these files being created or updated:
+		~Documents/foo/
+						foo-source.png
+						foo-meme.png
+						foo-meme-thumbnail.png
+
+	*/
 	func persistImages(originalImage: UIImage, memeImage: UIImage) -> Bool {
 		if let url = resourceURL {
 			return (
@@ -86,25 +130,10 @@ class  Meme: NSObject, NSCoding {
 		return false
 	}
 
-	var resourceURL: NSURL? {
-		if let id = id {
 
-			let documentURL = documentDirectoryURL()
-			let resourceURL = documentURL.URLByAppendingPathComponent(id, isDirectory: true)
-			var error: NSError?
-			// Try to create the directory, if it doesn't already exist:
-			NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil, error: &error)
-			if let err = error {
-				println("Unable to create directory for resource contents. Error: \(err.localizedDescription)")
-			} else {
-				return resourceURL
-			}
-		} else {
-			println("Can not provide URL for Meme that has no id")
-		}
-		return nil
-	}
-
+	/**
+	Removes the entire directory that contained images for the Meme.
+	*/
 	func removePersistedData() -> Bool {
 		if let url = resourceURL {
 			var error: NSError?
