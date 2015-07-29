@@ -10,6 +10,7 @@ import UIKit
 
 // TODO perhaps: Disable or remove save button if nothing has changed.
 // TODO perhaps: Always show, but disable or enable trash button.
+// TODO:
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
@@ -74,6 +75,39 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		// the keyboard appears, changes size, and disappears.
 		if memeCanvasDefaultCenterY == nil {
 			memeCanvasDefaultCenterY = memeCanvas.center.y
+		}
+	}
+
+	@IBAction func pickImage(sender: UIBarButtonItem) {
+		let picker = UIImagePickerController()
+		picker.delegate = self
+		picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+		self.presentViewController(picker, animated: true, completion: nil)
+	}
+
+	@IBAction func takePhoto(sender: UIBarButtonItem) {
+		let picker = UIImagePickerController()
+		picker.delegate = self
+		picker.sourceType = UIImagePickerControllerSourceType.Camera
+		self.presentViewController(picker, animated: true, completion: nil)
+	}
+
+	@IBAction func saveMeme(sender: UIBarButtonItem) {
+		persistMeme()
+	}
+
+	@IBAction func ShareMeme(sender: UIBarButtonItem) {
+		if let memeImage = persistMeme() {
+			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
+			self.presentViewController(activityVC, animated: true, completion: nil)
+		}
+	}
+
+	@IBAction func deleteMeme(sender: UIBarButtonItem) {
+		if let meme = meme {
+			if let id = meme.id {
+				MemeList.sharedInstance.removeMeme(meme)
+			}
 		}
 	}
 
@@ -167,39 +201,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.topText.defaultTextAttributes = memeTextAttributes
 		self.bottomText.defaultTextAttributes = memeTextAttributes
     }
-
-    @IBAction func pickImage(sender: UIBarButtonItem) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(picker, animated: true, completion: nil)
-    }
-
-    @IBAction func takePhoto(sender: UIBarButtonItem) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        picker.sourceType = UIImagePickerControllerSourceType.Camera
-        self.presentViewController(picker, animated: true, completion: nil)
-    }
-
-	@IBAction func saveMeme(sender: UIBarButtonItem) {
-		persistMeme()
-	}
-
-	@IBAction func ShareMeme(sender: UIBarButtonItem) {
-		if let memeImage = persistMeme() {
-			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
-			self.presentViewController(activityVC, animated: true, completion: nil)
-		}
-	}
-	
-	@IBAction func deleteMeme(sender: UIBarButtonItem) {
-		if let meme = meme {
-			if let id = meme.id {
-				MemeList.sharedInstance.removeMeme(meme)
-			}
-		}
-	}
 
 	/**
 	Saves the meme: writes the images and text to persistent storage.
