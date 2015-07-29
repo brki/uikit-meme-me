@@ -187,7 +187,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	}
 
 	@IBAction func ShareMeme(sender: UIBarButtonItem) {
-		persistMeme()
+		if let memeImage = persistMeme() {
+			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
+			self.presentViewController(activityVC, animated: true, completion: nil)
+		}
 	}
 	
 	@IBAction func deleteMeme(sender: UIBarButtonItem) {
@@ -201,7 +204,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	/**
 	Saves the meme: writes the images and text to persistent storage.
 	*/
-	func persistMeme() {
+	func persistMeme() -> UIImage? {
 		let memeList = MemeList.sharedInstance
 		if let meme = meme {
 			meme.topText = topText.text
@@ -213,10 +216,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 			if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
 				// A delete button should be shown:
 				setRightBarButtonItems()
+				return memeImage
 			} else {
 				println("Unable to persist meme")
 			}
 		}
+		return nil
 	}
 
 	/**
