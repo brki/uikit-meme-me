@@ -17,6 +17,7 @@
 		D325197A1B64E3DB00EFC535 /* SentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32519791B64E3DB00EFC535 /* SentViewController.swift */; };
 		D325197C1B65272D00EFC535 /* MemeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D325197B1B65272D00EFC535 /* MemeList.swift */; };
 		D325197E1B6533E400EFC535 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D325197D1B6533E400EFC535 /* Utilities.swift */; };
+		D32519801B6912B400EFC535 /* extension-UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D325197F1B6912B400EFC535 /* extension-UIImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		D32519791B64E3DB00EFC535 /* SentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SentViewController.swift; sourceTree = "<group>"; };
 		D325197B1B65272D00EFC535 /* MemeList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemeList.swift; sourceTree = "<group>"; };
 		D325197D1B6533E400EFC535 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		D325197F1B6912B400EFC535 /* extension-UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "extension-UIImage.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				D32519771B5A715800EFC535 /* Meme.swift */,
 				D325197B1B65272D00EFC535 /* MemeList.swift */,
 				D325197D1B6533E400EFC535 /* Utilities.swift */,
+				D325197F1B6912B400EFC535 /* extension-UIImage.swift */,
 				D3052D201B50FE39002449D8 /* Main.storyboard */,
 				D3052D231B50FE39002449D8 /* Images.xcassets */,
 				D3052D251B50FE39002449D8 /* LaunchScreen.xib */,
@@ -228,6 +231,7 @@
 				D325197A1B64E3DB00EFC535 /* SentViewController.swift in Sources */,
 				D32519781B5A715800EFC535 /* Meme.swift in Sources */,
 				D3052D1F1B50FE39002449D8 /* ViewController.swift in Sources */,
+				D32519801B6912B400EFC535 /* extension-UIImage.swift in Sources */,
 				D3052D1D1B50FE39002449D8 /* AppDelegate.swift in Sources */,
 				D325197C1B65272D00EFC535 /* MemeList.swift in Sources */,
 			);

@@ -8,10 +8,6 @@
 
 import UIKit
 
-// TODO perhaps: Disable or remove save button if nothing has changed.
-// TODO perhaps: Always show, but disable or enable trash button.
-// TODO:
-
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var imageView: UIImageView!
@@ -132,7 +128,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	func setActionButtonStatus() {
 		let imagePresent = imageView.image != nil
 		let memeSaved = meme?.id != nil
-		shareButton.enabled = imagePresent && memeSaved
+		shareButton.enabled = imagePresent
 		trashButton.enabled = imagePresent && memeSaved
 		saveButton.enabled = imagePresent && dirtyMeme
 	}
@@ -143,9 +139,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	*/
 	func setTextFieldsConstraints() {
 		NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
-		let (scale, scaledSize, vMargin, hMargin) = scaledImageDetails()
-		let verticalInset = vMargin + 4
-		let textFieldWidth = scaledSize.width - 4
+		let scaleInfo = scaledImageDetails()
+		let verticalInset = scaleInfo.verticalMargin + 4
+		let textFieldWidth = scaleInfo.imageSize.width - 4
 		let topTextYPosition = NSLayoutConstraint(
 			item: topText, attribute: .Top,	relatedBy: .Equal, toItem: imageView, attribute: .Top,
 			multiplier: 1, constant: verticalInset
@@ -176,9 +172,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 			let imageSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
 			let verticalMargin = (imageView.frame.height - imageSize.height) / 2
 			let horizontallMargin = (imageView.frame.width - imageSize.width) / 2
-			return (scale, imageSize, verticalMargin, horizontallMargin)
+			return (scale: scale, imageSize: imageSize, verticalMargin: verticalMargin, horizontalMargin: horizontallMargin)
 		}
-		return (1, CGSize(width: 1, height: 1), 0, 0)
+		return (scale: 1, imageSize: CGSize(width: 1, height: 1), verticalMargin: 0, horizontalMargin: 0)
 	}
 
 	/**
@@ -242,7 +238,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 			memeCanvas.drawViewHierarchyInRect(memeCanvas.bounds, afterScreenUpdates: false)
 			let image = UIGraphicsGetImageFromCurrentImageContext()
 			UIGraphicsEndImageContext()
-			return image
+
+			// Crop to remove any blank space around the image.
+			let info = scaledImageDetails()
+			let cropRect = imageView.bounds.rectByInsetting(dx: info.horizontalMargin, dy: info.verticalMargin)
+			return image.crop(cropRect)
 		}
 		return nil
 	}
