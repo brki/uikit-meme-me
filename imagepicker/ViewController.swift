@@ -29,6 +29,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var activeTextField: UITextField?
 	var textFieldConstraints = [NSLayoutConstraint]()
 	var keyboardHeight: CGFloat = 0
+	var dirtyMeme = false  // Whether or not the meme has been changed since creation or last save.
 
     enum TextFieldPosition {
         case Top, Bottom
@@ -53,7 +54,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
-		setRightBarButtonItems()
+		setActionButtonStatus()
+		navigationItem.rightBarButtonItems = [saveButton, trashButton, shareButton]
 		if let image = imageView.image {
 			setTextFieldsHidden(false)
 			setTextFieldsConstraints()
@@ -96,18 +98,29 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		persistMeme()
 	}
 
-	@IBAction func ShareMeme(sender: UIBarButtonItem) {
+	@IBAction func shareMeme(sender: UIBarButtonItem) {
 		if let memeImage = persistMeme() {
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
 			self.presentViewController(activityVC, animated: true, completion: nil)
 		}
 	}
 
+	/**
+	Deletes the meme and returns to the previous view controller.
+	*/
 	@IBAction func deleteMeme(sender: UIBarButtonItem) {
 		if let meme = meme {
-			if let id = meme.id {
-				MemeList.sharedInstance.removeMeme(meme)
-			}
+			let alertController = UIAlertController(title: "Delete Meme", message: "It will be gone for good. Are you sure?", preferredStyle: .Alert)
+			alertController.addAction(
+				UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction!) in
+					MemeList.sharedInstance.removeMeme(meme)
+					self.navigationController?.popViewControllerAnimated(true)
+				})
+			)
+			alertController.addAction(
+				UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
+			)
+			presentViewController(alertController, animated: true, completion: nil)
 		}
 	}
 
@@ -116,18 +129,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		bottomText.hidden = hidden
 	}
 
-	func setRightBarButtonItems() {
-		if let image = imageView.image {
-			var rightButtons = [saveButton, shareButton]
-			if let meme = meme {
-				if meme.id != nil {
-					rightButtons.insert(trashButton, atIndex: 1)
-				}
-			}
-			navigationItem.rightBarButtonItems = rightButtons
-		} else {
-			navigationItem.rightBarButtonItems = nil
-		}
+	func setActionButtonStatus() {
+		let imagePresent = imageView.image != nil
+		let memeSaved = meme?.id != nil
+		shareButton.enabled = imagePresent && memeSaved
+		trashButton.enabled = imagePresent && memeSaved
+		saveButton.enabled = imagePresent && dirtyMeme
 	}
 
 	/**
@@ -206,23 +213,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 	Saves the meme: writes the images and text to persistent storage.
 	*/
 	func persistMeme() -> UIImage? {
-		let memeList = MemeList.sharedInstance
-		if let meme = meme {
-			meme.topText = topText.text
-			meme.bottomText = bottomText.text
-		} else {
-			meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
-		}
-		if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
-			if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
-				// A delete button should be shown:
-				setRightBarButtonItems()
-				return memeImage
+		if dirtyMeme {
+			let memeList = MemeList.sharedInstance
+			if let meme = meme {
+				meme.topText = topText.text
+				meme.bottomText = bottomText.text
 			} else {
-				println("Unable to persist meme")
+				meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
+			}
+			if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
+				if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
+					// Delete button should be active:
+					setActionButtonStatus()
+				} else {
+					println("Unable to persist meme")
+				}
 			}
 		}
-		return nil
+		return meme?.image(.Meme)
 	}
 
 	/**
@@ -269,6 +277,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.imageView.image = image
+			dirtyMeme = true
         }
 
         dismissViewControllerAnimated(true, completion: nil)
@@ -292,8 +301,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		// Clear the text if it's still the default text:
 		if (textField == topText && textField.text == "TOP") || (textField == bottomText && textField.text == "BOTTOM") {
 			textField.text = ""
+			dirtyMeme = true
 		}
     }
+
+	func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+		dirtyMeme = true
+		return true
+	}
 
     // MARK: Keyboard hide/show notification handlers:
 

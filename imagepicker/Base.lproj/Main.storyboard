@@ -125,7 +125,7 @@
                         </barButtonItem>
                         <barButtonItem systemItem="action" id="fZL-Rc-qwO" userLabel="Share">
                             <connections>
-                                <action selector="ShareMeme:" destination="BYZ-38-t0r" id="tEI-dn-ESf"/>
+                                <action selector="shareMeme:" destination="BYZ-38-t0r" id="1D4-Zg-EaL"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem systemItem="trash" id="o22-fc-NNB">
