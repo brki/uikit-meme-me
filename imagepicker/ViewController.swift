@@ -210,12 +210,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 			meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
 		}
 		if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
-			if meme.persistImages(original, memeImage: memeImage) {
-				memeList.saveMeme(meme)
-				// Perhaps a trash icon needs to be added:
+			if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
+				// A delete button should be shown:
 				setRightBarButtonItems()
 			} else {
-				println("Unable to persist images")
+				println("Unable to persist meme")
 			}
 		}
 	}

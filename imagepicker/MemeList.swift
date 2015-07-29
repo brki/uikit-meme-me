@@ -6,11 +6,14 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 // This is a slow and dirty way to persist the list of memes.
 // For a production-ready app, a better storage mechanism would be used.
 
+/**
+Used to manage saving and deleting memes from permanent storage.
+*/
 class MemeList {
 	var list = [Meme]()
 	static let dataFile = "memeList.data"
@@ -58,20 +61,27 @@ class MemeList {
 
 	/**
 	Saves the provided meme to persistent storage.
+
+	This also calls ``meme.persistImages()``
 	*/
-	func saveMeme(meme: Meme) {
+	func saveMeme(meme: Meme, originalImage: UIImage, memeImage: UIImage) -> Bool {
+		if !meme.persistImages(originalImage, memeImage: memeImage) {
+			println("Unable to persist meme images")
+			return false
+		}
 		if let index = indexOfMeme(meme) {
 			list[index] = meme
 		} else {
 			list.append(meme)
 		}
 		persist()
+		return true
 	}
 
 	/**
 	Remove the given meme from persistent storage.
 	
-	This also calls meme.removePersistedData()
+	This also calls ``meme.removePersistedData()``
     */
 	func removeMeme(meme: Meme) {
 		if let index = indexOfMeme(meme) {
