@@ -27,11 +27,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var memeCanvasDefaultCenterY: CGFloat?
     var activeTextField: UITextField?
 	var textFieldConstraints = [NSLayoutConstraint]()
-	var keyboardHeight: CGFloat = 0 {
-		didSet {
-			ensureTextFieldVisible()
-		}
-	}
+	var keyboardHeight: CGFloat = 0
 
     enum TextFieldPosition {
         case Top, Bottom
@@ -45,7 +41,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         setDefaultTextAttributes()
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardWillShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
 
@@ -238,17 +234,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 		return nil
 	}
 
+	func ensureTextFieldVisible() {
+		ensureTextFieldVisible(animationDuration: nil, animationCurve: nil)
+	}
+
 	/**
 	If necessary, repositions the memeCanvas view so that the currently active text field is visible.
 
-	Note that this is called whenever the keyboardHeight property changes.
+	The repositioning will be animated if ``animationDuration`` and ``animationCurve`` are provided.
 	*/
-	func ensureTextFieldVisible() {
+	func ensureTextFieldVisible(#animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
 		if let textField = activeTextField, let defaultY = memeCanvasDefaultCenterY {
 			let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
 			let keyboardTopY = view.frame.size.height - keyboardHeight
 			if keyboardTopY < textFieldBottomY {
-				memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
+				if let duration = animationDuration, curve = animationCurve {
+					UIView.animateWithDuration(duration, delay: 0.0, options: curve, animations: {
+						self.memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
+					}, completion: nil)
+				} else {
+					self.memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
+				}
 			}
 		}
 	}
@@ -285,10 +291,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
     // MARK: Keyboard hide/show notification handlers:
-	
+
     func keyboardWasShown(notification: NSNotification) {
-		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-			keyboardHeight = keyboardSize.height
+		if let userInfo = notification.userInfo as [NSObject: AnyObject]? {
+			if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+				keyboardHeight = keyboardSize.height
+				let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
+				let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
+				ensureTextFieldVisible(animationDuration: animationDuration, animationCurve: animationOption)
+			}
 		} else {
 			keyboardHeight = 0
 		}
