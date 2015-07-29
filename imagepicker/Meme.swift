@@ -77,8 +77,10 @@ class  Meme: NSObject, NSCoding {
 	*/
 	func image(type: ResourceType) -> UIImage?
 	{
-		if let name = imageNameForType(type) {
-			return UIImage(named: name)
+		if let name = imageNameForType(type),
+			let baseUrl = resourceURL,
+			let imageFile = baseUrl.URLByAppendingPathComponent(name).path {
+				return UIImage(contentsOfFile: imageFile)
 		}
 		return nil
 	}
