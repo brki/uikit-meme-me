@@ -143,58 +143,47 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	for the image that is currently displayed.
 	*/
 	func setTextFieldsConstraints() {
-		NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
-		let scaleInfo = scaledImageDetails()
-		let verticalInset = scaleInfo.verticalMargin + 4
-		let textFieldWidth = scaleInfo.imageSize.width - 4
-		let topTextYPosition = NSLayoutConstraint(
-			item: topText, attribute: .Top,	relatedBy: .Equal, toItem: imageView, attribute: .Top,
-			multiplier: 1, constant: verticalInset
-		)
-		let topTextWidth = NSLayoutConstraint(
-			item: topText, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,
-			multiplier: 1, constant: textFieldWidth
-		)
-		let bottomTextYPosition = NSLayoutConstraint(
-			item: bottomText, attribute: .Bottom,	relatedBy: .Equal, toItem: imageView, attribute: .Bottom,
-			multiplier: 1, constant: -verticalInset
-		)
-		let bottomTextWidth = NSLayoutConstraint(
-			item: bottomText, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,
-			multiplier: 1, constant: textFieldWidth
-		)
-		textFieldConstraints = [topTextYPosition, topTextWidth, bottomTextYPosition, bottomTextWidth]
-		NSLayoutConstraint.activateConstraints(textFieldConstraints)
+		if let image = imageView.image {
+			NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
+			let margins = imageMargins()
+			let verticalInset = margins.verticalMargin + 4
+			let textFieldWidth = image.size.width - 4
+			let topTextYPosition = NSLayoutConstraint(
+				item: topText, attribute: .Top,	relatedBy: .Equal, toItem: imageView, attribute: .Top,
+				multiplier: 1, constant: verticalInset
+			)
+			let topTextWidth = NSLayoutConstraint(
+				item: topText, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,
+				multiplier: 1, constant: textFieldWidth
+			)
+			let bottomTextYPosition = NSLayoutConstraint(
+				item: bottomText, attribute: .Bottom,	relatedBy: .Equal, toItem: imageView, attribute: .Bottom,
+				multiplier: 1, constant: -verticalInset
+			)
+			let bottomTextWidth = NSLayoutConstraint(
+				item: bottomText, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,
+				multiplier: 1, constant: textFieldWidth
+			)
+			textFieldConstraints = [topTextYPosition, topTextWidth, bottomTextYPosition, bottomTextWidth]
+			NSLayoutConstraint.activateConstraints(textFieldConstraints)
+		}
 	}
 
 	/**
-	Returns the scaled size of the image, and the vertical and horizon margins (i.e. the space between
-	the edge of the image and the edge of the image view).
+	Returns the margins around the image in the image view.
+
+	Assumes that the image in centered in the image view.
 	*/
-	func scaledImageDetails() -> (scale: CGFloat, imageSize: CGSize, verticalMargin: CGFloat, horizontalMargin: CGFloat) {
+	func imageMargins() -> (verticalMargin: CGFloat, horizontalMargin: CGFloat) {
+		var verticalMargin = CGFloat(0)
+		var horizontallMargin = CGFloat(0)
 		if let image = imageView.image {
-			let scale = imageScale
-			let imageSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
-			let verticalMargin = (imageView.frame.height - imageSize.height) / 2
-			let horizontallMargin = (imageView.frame.width - imageSize.width) / 2
-			return (scale: scale, imageSize: imageSize, verticalMargin: verticalMargin, horizontalMargin: horizontallMargin)
+			verticalMargin = (imageView.frame.height - image.size.height) / 2
+			horizontallMargin = (imageView.frame.width - image.size.width) / 2
 		}
-		return (scale: 1, imageSize: CGSize(width: 1, height: 1), verticalMargin: 0, horizontalMargin: 0)
+		return (verticalMargin: verticalMargin, horizontalMargin: horizontallMargin)
 	}
 
-	/**
-	The scale that has been applied to the image to fit in the image view
-	*/
-    var imageScale: CGFloat {
-		if let image = imageView.image {
-			let verticalRatio = imageView.frame.size.height / image.size.height
-			let horizontalRatio = imageView.frame.size.width / image.size.width
-			// If either ratio is < 1, the image will be scaled to the smaller of the two ratios.
-			return min(1, min(verticalRatio, horizontalRatio))
-		}
-		// If no image no scaling is done:
-		return 1
-    }
 
 	/**
 	Style the text fields.
@@ -240,15 +229,25 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	func memeAsImage() -> UIImage? {
 		if let image = imageView.image {
+
+			// Hide the textFieldCursor during snapshot generation
+			let oldTextFieldTint = activeTextField?.tintColor
+			activeTextField?.tintColor = UIColor.clearColor()
+
 			UIGraphicsBeginImageContextWithOptions(memeCanvas.bounds.size, memeCanvas.opaque, 0.0)
-			memeCanvas.drawViewHierarchyInRect(memeCanvas.bounds, afterScreenUpdates: false)
+			memeCanvas.drawViewHierarchyInRect(memeCanvas.bounds, afterScreenUpdates: true)
 			let image = UIGraphicsGetImageFromCurrentImageContext()
 			UIGraphicsEndImageContext()
 
+			// Make the text field cursor visible again
+			if let oldTint = oldTextFieldTint {
+				activeTextField?.tintColor = oldTextFieldTint
+			}
+
 			// Crop to remove any blank space around the image.
-			let info = scaledImageDetails()
-			let cropRect = imageView.bounds.rectByInsetting(dx: info.horizontalMargin, dy: info.verticalMargin)
-			return image.crop(cropRect)
+			let margins = imageMargins()
+			let cropRect = imageView.bounds.rectByInsetting(dx: margins.horizontalMargin, dy: margins.verticalMargin)
+			return image.crop(cropRect, screenScale: UIScreen.mainScreen().scale)
 		}
 		return nil
 	}
@@ -286,7 +285,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            self.imageView.image = image
+			self.imageView.image = image.scaledToFitImageView(self.imageView, withScreenScale:UIScreen.mainScreen().scale)
 			dirtyMeme = true
         }
 

@@ -15,15 +15,36 @@ public extension UIImage {
 	
 	Based on http://stackoverflow.com/a/8443937/948341
 	*/
-	func crop(aRect: CGRect) -> UIImage? {
-		let rect = CGRectMake(
-			aRect.origin.x * self.scale,
-			aRect.origin.y * self.scale,
-			aRect.size.width * self.scale,
-			aRect.size.height * self.scale)
-
+	func crop(aRect: CGRect, screenScale: CGFloat) -> UIImage? {
+		let rect = scaledRect(aRect, scale: screenScale)
 		let cgImage = CGImageCreateWithImageInRect(self.CGImage, rect)
-		let croppedImage = UIImage(CGImage: cgImage, scale: self.scale, orientation: self.imageOrientation)
+		let croppedImage = UIImage(CGImage: cgImage, scale: screenScale, orientation: self.imageOrientation)
 		return croppedImage
+	}
+
+	/**
+	Return a scaled down image if scaling down is necessary for image to fit in imageView.
+	*/
+	func scaledToFitImageView(imageView: UIImageView, withScreenScale screenScale: CGFloat) -> UIImage? {
+		let verticalRatio = imageView.frame.size.height / self.size.height
+		let horizontalRatio = imageView.frame.size.width / self.size.width
+		let scale = min(1, min(horizontalRatio, verticalRatio))
+		if scale < 1 {
+			let rect = scaledRect(CGRect(origin: CGPointZero, size: self.size), scale: scale)
+			UIGraphicsBeginImageContextWithOptions(rect.size, true, screenScale)
+			self.drawInRect(rect)
+			let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+			UIGraphicsEndImageContext()
+			return scaledImage
+		}
+		return self
+	}
+
+	func scaledRect(rect: CGRect, scale: CGFloat) -> CGRect {
+		return CGRectMake(
+			rect.origin.x * scale,
+			rect.origin.y * scale,
+			rect.size.width * scale,
+			rect.size.height * scale)
 	}
 }
