@@ -41,9 +41,12 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
         setDefaultTextAttributes()
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardWillShowNotification, object: nil)
-        notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+		notificationCenter.addObserver(self, selector: "keyboardSizeChanging:", name: UIKeyboardWillChangeFrameNotification, object: nil)
     }
+
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self)
+	}
 
 	/**
 	Ensure that the appropriate elements are shown or hidden, and that the text fields are appropriately sized,
@@ -264,17 +267,21 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
 			let keyboardTopY = view.frame.size.height - keyboardHeight
 			if keyboardTopY < textFieldBottomY {
-				if let duration = animationDuration, curve = animationCurve {
-					UIView.animateWithDuration(duration, delay: 0.0, options: curve, animations: {
-						self.memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
-					}, completion: nil)
-				} else {
-					self.memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
+				var duration = NSTimeInterval(0)
+				var options: UIViewAnimationOptions = .TransitionNone
+				if let aDuration = animationDuration, aCurve = animationCurve {
+					duration = aDuration
+					options = aCurve
 				}
+
+				UIView.animateWithDuration(duration, delay: 0.0, options: options, animations: {
+					self.memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
+					}, completion: nil)
 			}
 		}
 	}
-	
+
+
 	// MARK: UIImagePickerControllerDelegate methods:
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
@@ -289,6 +296,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
+
 
     // MARK: UITextFieldDelegate methods:
 
@@ -316,27 +324,20 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		return true
 	}
 
-    // MARK: Keyboard hide/show notification handlers:
 
-    func keyboardWasShown(notification: NSNotification) {
-		if let userInfo = notification.userInfo as [NSObject: AnyObject]? {
-			if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
-				keyboardHeight = keyboardSize.height
-				let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
-				let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
-				ensureTextFieldVisible(animationDuration: animationDuration, animationCurve: animationOption)
-			}
-		} else {
-			keyboardHeight = 0
-		}
-    }
+    // MARK: Keyboard notification handlers:
 
-    func keyboardWillHide(notification: NSNotification) {
-		if let y = memeCanvasDefaultCenterY {
-			if y != memeCanvas.center.y {
-				memeCanvas.center.y = y
-			}
-		}
+	func keyboardSizeChanging(notification: NSNotification) {
 		keyboardHeight = 0
-    }
+		if let userInfo = notification.userInfo as [NSObject: AnyObject]? {
+			if let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue(),
+				let beginFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+					let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
+					let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
+					keyboardHeight = endFrame.height
+			}
+		}
+		// Let the view know that subviews need to be positioned again.  This will lead to ensureTextFieldVisible() being called.
+		view.setNeedsLayout()
+	}
 }
