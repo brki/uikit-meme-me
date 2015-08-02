@@ -93,7 +93,6 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		if editingStyle == .Delete {
 			memeList.removeMemeAtIndex(indexPath.row)
 			tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-			tableView.reloadData()
 		}
 	}
 }
