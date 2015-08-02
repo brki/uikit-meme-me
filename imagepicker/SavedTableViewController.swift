@@ -1,5 +1,5 @@
 //
-//  SentViewController.swift
+//  SavedTableViewController.swift
 //  imagepicker
 //
 //  Created by Brian on 26/07/15.

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  EditorViewController.swift
 //  imagepicker
 //
 //  Created by Brian on 11/07/15.
@@ -7,6 +7,8 @@
 //
 
 import UIKit
+
+// TODO perhaps: instead of save in memeeditor, have a cancel button, and auto-save when going back.
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
@@ -63,7 +65,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		// When the text in a textbox shrinks, the views are layed out again, and it may be necessary to
-		// reposition the view to ensure that the text field remains visible.
+		// reposition the memeCanvas view to ensure that the text field remains visible.
 		ensureTextFieldVisible()
 	}
 
@@ -307,7 +309,10 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
 
 	func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-		dirtyMeme = true
+		if !dirtyMeme {
+			dirtyMeme = true
+			setActionButtonStatus()
+		}
 		return true
 	}
 
