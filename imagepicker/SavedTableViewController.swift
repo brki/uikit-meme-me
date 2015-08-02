@@ -14,6 +14,14 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 
 	var memeList: MemeList!
 
+	enum TableCellTag: Int {
+		case imageView = 1
+		case topText = 2
+		case bottomText = 3
+	}
+
+	let tableCellHeight = CGFloat(65 + 6) // ImageView height as defined in storyboard + a bit of padding.
+
 	override func viewDidLoad() {
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -46,6 +54,14 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		memeList.removeMemeAtIndex(indexPath.row)
 	}
 
+	func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+		return tableCellHeight
+	}
+
+	func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+		return tableCellHeight
+	}
+
 
 	// MARK: UITableViewDataSource methods:
 
@@ -57,8 +73,15 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		let cell = tableView.dequeueReusableCellWithIdentifier("savedMeme") as! UITableViewCell
 		let meme = memeList[indexPath.row]
 		let image = meme.image(Meme.ResourceType.MemeThumbnail)
-		cell.imageView!.image = meme.image(Meme.ResourceType.MemeThumbnail)
-		cell.textLabel!.text = meme.topText + " / " + meme.bottomText
+		if let imageView = cell.contentView.viewWithTag(TableCellTag.imageView.rawValue) as? UIImageView {
+			imageView.image = meme.image(Meme.ResourceType.MemeThumbnail)
+		}
+		if let topText = cell.contentView.viewWithTag(TableCellTag.topText.rawValue) as? UILabel {
+			topText.text = meme.topText
+		}
+		if let bottomText = cell.contentView.viewWithTag(TableCellTag.bottomText.rawValue) as? UILabel {
+			bottomText.text = meme.bottomText
+		}
 		return cell
 	}
 
