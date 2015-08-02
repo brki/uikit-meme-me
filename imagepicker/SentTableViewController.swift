@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SentViewController: UIViewController {
+class SentTableViewController: UIViewController {
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		if let identifier = segue.identifier {
