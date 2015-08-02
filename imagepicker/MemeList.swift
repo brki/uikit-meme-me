@@ -26,6 +26,11 @@ class MemeList {
 		return documentDirectoryURL().URLByAppendingPathComponent(MemeList.dataFile)
 	}
 
+	// Convenience subscript access to underlying list.
+	subscript(index: Int) -> Meme {
+		return list[index]
+	}
+
 	/**
 	Load the persisted Memes into memory from storage.
     */
@@ -80,15 +85,23 @@ class MemeList {
 
 	/**
 	Remove the given meme from persistent storage.
-	
-	This also calls ``meme.removePersistedData()``
     */
 	func removeMeme(meme: Meme) {
 		if let index = indexOfMeme(meme) {
-			meme.removePersistedData()
-			list.removeAtIndex(index)
-			persist()
+			removeMemeAtIndex(index)
 		}
+	}
+
+	/**
+	Remove the meme at the given index from persistent storage.
+
+	This also calls ``meme.removePersistedData()``
+	*/
+	func removeMemeAtIndex(index: Int) {
+		let meme = list[index]
+		meme.removePersistedData()
+		list.removeAtIndex(index)
+		persist()
 	}
 
 	/**

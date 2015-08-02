@@ -219,6 +219,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			}
 			if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
 				if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
+					dirtyMeme = false
 					// Delete button should be active:
 					setActionButtonStatus()
 				} else {
