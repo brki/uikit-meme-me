@@ -29,26 +29,27 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 	}
 
 	override func viewWillAppear(animated: Bool) {
+		self.tabBarController!.tabBar.hidden = false
 		tableView.reloadData()
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		// Hide the tab bar on the current controller's view before pushing, so that there's not an ugly animation
+		// of hiding the tab bar after the destination VC has appeared.
+		// The destination view controller has a storyboard property that hides the tabbar for it's view.
+		self.tabBarController!.tabBar.hidden = true
 		if let identifier = segue.identifier {
-			if identifier == "fromListToEditor" {
-				// Hide the tab bar on the current controller's view before pushing, so that there's not an ugly animation
-				// of hiding the tab bar after the destination VC has appeared.
-				// The destination view controller has a storyboard property that hides the tabbar for it's view.
-				self.tabBarController!.tabBar.hidden = true
+			if identifier == "detailFromTableView" {
+				let detailVC = segue.destinationViewController as! DetailViewController
+				if let path = tableView.indexPathForSelectedRow() {
+					detailVC.meme = memeList[path.row]
+				}
 			}
 		}
 	}
 
 
 	// MARK: UITableViewDelegate methods:
-
-	func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-		// TODO: show detail view
-	}
 
 	func deleteMeme(action: UITableViewRowAction!, indexPath: NSIndexPath!) {
 		memeList.removeMemeAtIndex(indexPath.row)

@@ -19,6 +19,7 @@
 		D325197E1B6533E400EFC535 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D325197D1B6533E400EFC535 /* Utilities.swift */; };
 		D32519801B6912B400EFC535 /* extension-UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D325197F1B6912B400EFC535 /* extension-UIImage.swift */; };
 		D32519821B6E4AA100EFC535 /* SavedCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32519811B6E4AA100EFC535 /* SavedCollectionViewController.swift */; };
+		D32519841B6FE19600EFC535 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32519831B6FE19600EFC535 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		D325197D1B6533E400EFC535 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		D325197F1B6912B400EFC535 /* extension-UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "extension-UIImage.swift"; sourceTree = "<group>"; };
 		D32519811B6E4AA100EFC535 /* SavedCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedCollectionViewController.swift; sourceTree = "<group>"; };
+		D32519831B6FE19600EFC535 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				D32519791B64E3DB00EFC535 /* SavedTableViewController.swift */,
 				D32519811B6E4AA100EFC535 /* SavedCollectionViewController.swift */,
 				D3052D1E1B50FE39002449D8 /* EditorViewController.swift */,
+				D32519831B6FE19600EFC535 /* DetailViewController.swift */,
 				D32519771B5A715800EFC535 /* Meme.swift */,
 				D325197B1B65272D00EFC535 /* MemeList.swift */,
 				D325197D1B6533E400EFC535 /* Utilities.swift */,
@@ -230,6 +233,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D32519841B6FE19600EFC535 /* DetailViewController.swift in Sources */,
 				D325197E1B6533E400EFC535 /* Utilities.swift in Sources */,
 				D325197A1B64E3DB00EFC535 /* SavedTableViewController.swift in Sources */,
 				D32519781B5A715800EFC535 /* Meme.swift in Sources */,
