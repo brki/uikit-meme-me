@@ -43,7 +43,7 @@
         <!--Detail View Controller-->
         <scene sceneID="3Ob-9H-1A9">
             <objects>
-                <viewController id="BXX-Sc-HOP" customClass="DetailViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="BXX-Sc-HOP" customClass="DetailViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hj3-Hz-nd2"/>
                         <viewControllerLayoutGuide type="bottom" id="enr-DB-T0o"/>
@@ -52,20 +52,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PtP-QV-YcJ">
-                                <rect key="frame" x="0.0" y="11" width="600" height="600"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PtP-QV-YcJ">
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="PtP-QV-YcJ" firstAttribute="leading" secondItem="8ao-bm-7yt" secondAttribute="leading" id="3DB-E6-BNg"/>
-                            <constraint firstItem="PtP-QV-YcJ" firstAttribute="top" secondItem="8ao-bm-7yt" secondAttribute="top" id="cGS-SQ-0tn"/>
+                            <constraint firstItem="enr-DB-T0o" firstAttribute="top" secondItem="PtP-QV-YcJ" secondAttribute="bottom" id="V0b-6h-rCg"/>
                             <constraint firstAttribute="trailing" secondItem="PtP-QV-YcJ" secondAttribute="trailing" id="mI0-S3-oN8"/>
-                            <constraint firstAttribute="bottom" secondItem="PtP-QV-YcJ" secondAttribute="bottom" id="qaH-yU-9kI"/>
+                            <constraint firstItem="PtP-QV-YcJ" firstAttribute="top" secondItem="hj3-Hz-nd2" secondAttribute="bottom" id="rxx-DU-ce3"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem systemItem="trash" id="4hK-fp-pnk">
+                            <connections>
+                                <action selector="deleteMeme:" destination="BXX-Sc-HOP" id="kPn-4I-2ZD"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem systemItem="edit" id="eLK-Jv-LrA">
+                            <connections>
+                                <segue destination="BYZ-38-t0r" kind="show" identifier="toEditorFromDetail" id="0DC-fs-XGA"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="editButton" destination="eLK-Jv-LrA" id="WSP-3W-PdS"/>
                         <outlet property="imageView" destination="PtP-QV-YcJ" id="Nm8-1j-oI5"/>
+                        <outlet property="trashButton" destination="4hK-fp-pnk" id="FKu-i4-bCE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sWC-Bh-6Um" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -296,11 +311,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="281" y="27"/>
+            <point key="canvasLocation" x="956" y="27"/>
         </scene>
     </scenes>
     <resources>
         <image name="Collection" width="22" height="22"/>
         <image name="TableList" width="22" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="0DC-fs-XGA"/>
+    </inferredMetricsTieBreakers>
 </document>

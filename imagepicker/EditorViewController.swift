@@ -22,16 +22,21 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	@IBOutlet weak var trashButton: UIBarButtonItem!
 
 	var meme: Meme?
-    let textFieldToImageBorderMargin = CGFloat(10)
     var memeCanvasDefaultCenterY: CGFloat?
     var activeTextField: UITextField?
 	var textFieldConstraints = [NSLayoutConstraint]()
 	var keyboardHeight: CGFloat = 0
-	var dirtyMeme = false  // Whether or not the meme has been changed since creation or last save.
+	var isPresentingExistingMeme = false
+	var memeTransitionImage: UIImage?  // Image can be specified by pushing controller; will be shown in editor during push animation.
 
-    enum TextFieldPosition {
-        case Top, Bottom
-    }
+	// Whether or not the meme has been changed since creation or last save:
+	var dirtyMeme = false {
+		didSet(oldValue) {
+			if oldValue != dirtyMeme {
+				setActionButtonStatus()
+			}
+		}
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,21 +60,27 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
+		if isPresentingExistingMeme {
+			if let meme = meme {
+				if let image = memeTransitionImage {
+					imageView.image = image
+				}
+				topText.text = meme.topText
+				bottomText.text = meme.bottomText
+			}
+		}
 		setActionButtonStatus()
 		navigationItem.rightBarButtonItems = [saveButton, trashButton, shareButton]
-		if let image = imageView.image {
-			setTextFieldsHidden(false)
-			setTextFieldsConstraints()
-		} else {
-			setTextFieldsHidden(true)
-		}
+		setTextFieldsHidden(true)
     }
 
+	/**
+	When the text in a textbox shrinks, the views are layed out again, and it may be necessary to
+	reposition the memeCanvas view to ensure that the text field remains visible.
+	*/
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		// When the text in a textbox shrinks, the views are layed out again, and it may be necessary to
-		// reposition the memeCanvas view to ensure that the text field remains visible.
-		ensureTextFieldVisible()
+		ensureActiveTextFieldVisible()
 	}
 
 	override func viewDidAppear(animated: Bool) {
@@ -79,6 +90,23 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if memeCanvasDefaultCenterY == nil {
 			memeCanvasDefaultCenterY = memeCanvas.center.y
 		}
+
+
+		if isPresentingExistingMeme {
+			isPresentingExistingMeme = false
+			if let meme = meme {
+				if let image = meme.image(.Source) {
+					imageView.image = image.scaledToFitImageView(imageView, withScreenScale:UIScreen.mainScreen().scale)
+					memeTransitionImage = nil
+				}
+			}
+		}
+
+		let imagePresent = imageView.image != nil
+		if imagePresent {
+			setTextFieldsConstraints()
+		}
+		setTextFieldsHidden(!imagePresent)
 	}
 
 	@IBAction func pickImage(sender: UIBarButtonItem) {
@@ -115,7 +143,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			alertController.addAction(
 				UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction!) in
 					MemeList.sharedInstance.removeMeme(meme)
-					self.navigationController?.popViewControllerAnimated(true)
+					self.navigationController?.popToRootViewControllerAnimated(true)
 				})
 			)
 			alertController.addAction(
@@ -214,8 +242,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
 				if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
 					dirtyMeme = false
-					// Delete button should be active:
-					setActionButtonStatus()
 				} else {
 					println("Unable to persist meme")
 				}
@@ -252,8 +278,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		return nil
 	}
 
-	func ensureTextFieldVisible() {
-		ensureTextFieldVisible(animationDuration: nil, animationCurve: nil)
+	func ensureActiveTextFieldVisible() {
+		ensureActiveTextFieldVisible(animationDuration: nil, animationCurve: nil)
 	}
 
 	/**
@@ -261,7 +287,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	The repositioning will be animated if ``animationDuration`` and ``animationCurve`` are provided.
 	*/
-	func ensureTextFieldVisible(#animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
+	func ensureActiveTextFieldVisible(#animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
 		if let textField = activeTextField, let defaultY = memeCanvasDefaultCenterY {
 			let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
 			let keyboardTopY = view.frame.size.height - keyboardHeight
@@ -285,10 +311,9 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-			self.imageView.image = image.scaledToFitImageView(self.imageView, withScreenScale:UIScreen.mainScreen().scale)
+			imageView.image = image.scaledToFitImageView(imageView, withScreenScale:UIScreen.mainScreen().scale)
 			dirtyMeme = true
         }
-
         dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -318,7 +343,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
 		if !dirtyMeme {
 			dirtyMeme = true
-			setActionButtonStatus()
 		}
 		return true
 	}
