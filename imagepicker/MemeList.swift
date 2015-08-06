@@ -110,11 +110,9 @@ class MemeList {
 	:returns: Int index, or nil if not found
 	*/
 	func indexOfMeme(meme: Meme) -> Int? {
-		if let id = meme.id {
-			for (index, storedMeme) in enumerate(list) {
-				if storedMeme.id! == id {
-					return index
-				}
+		for (index, storedMeme) in enumerate(list) {
+			if storedMeme.id == meme.id {
+				return index
 			}
 		}
 		return nil

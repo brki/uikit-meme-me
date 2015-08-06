@@ -22,7 +22,7 @@ class  Meme: NSObject, NSCoding {
 
 	static let cache = NSCache()
 
-	var id: String?
+	var id: String!
 	var topText: String
 	var bottomText: String
 
@@ -31,20 +31,16 @@ class  Meme: NSObject, NSCoding {
 	Provides the URL of the directory to use for storing images for the current meme.
 	*/
 	var resourceURL: NSURL? {
-		if let id = id {
 
-			let documentURL = documentDirectoryURL()
-			let resourceURL = documentURL.URLByAppendingPathComponent(id, isDirectory: true)
-			var error: NSError?
-			// Try to create the directory, if it doesn't already exist:
-			NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil, error: &error)
-			if let err = error {
-				println("Unable to create directory for resource contents. Error: \(err.localizedDescription)")
-			} else {
-				return resourceURL
-			}
+		let documentURL = documentDirectoryURL()
+		let resourceURL = documentURL.URLByAppendingPathComponent(id, isDirectory: true)
+		var error: NSError?
+		// Try to create the directory, if it doesn't already exist:
+		NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil, error: &error)
+		if let err = error {
+			println("Unable to create directory for resource contents. Error: \(err.localizedDescription)")
 		} else {
-			println("Can not provide URL for Meme that has no id")
+			return resourceURL
 		}
 		return nil
 	}
@@ -72,12 +68,8 @@ class  Meme: NSObject, NSCoding {
 
 	deinit {
 		// Clear any items from the cache.
-		if id != nil {
-			for type in [ResourceType.Source, ResourceType.Meme, ResourceType.MemeThumbnailSmall, ResourceType.MemeThumbnailLarge] {
-				if let name = imageNameForType(type) {
-					Meme.cache.removeObjectForKey(name)
-				}
-			}
+		for type in [ResourceType.Source, ResourceType.Meme, ResourceType.MemeThumbnailSmall, ResourceType.MemeThumbnailLarge] {
+			Meme.cache.removeObjectForKey(imageNameForType(type))
 		}
 	}
 
@@ -95,15 +87,14 @@ class  Meme: NSObject, NSCoding {
 	*/
 	func image(type: ResourceType) -> UIImage?
 	{
-		if let name = imageNameForType(type) {
-			if let image = Meme.cache.objectForKey(name) as? UIImage {
+		let name = imageNameForType(type)
+		if let image = Meme.cache.objectForKey(name) as? UIImage {
+			return image
+		}
+		if let baseUrl = resourceURL, let imageFile = baseUrl.URLByAppendingPathComponent(name).path {
+			if let image = UIImage(contentsOfFile: imageFile) {
+				Meme.cache.setObject(image, forKey: name)
 				return image
-			}
-			if let baseUrl = resourceURL, let imageFile = baseUrl.URLByAppendingPathComponent(name).path {
-				if let image = UIImage(contentsOfFile: imageFile) {
-					Meme.cache.setObject(image, forKey: name)
-					return image
-				}
 			}
 		}
 		return nil
@@ -111,13 +102,9 @@ class  Meme: NSObject, NSCoding {
 
 	/**
 	*/
-	func imageNameForType(type: ResourceType) -> String? {
-		if let id = id {
-			let scale = UIScreen.mainScreen().scale
-			return "\(id)-\(type.rawValue)@\(scale)x.png"
-		}
-		println("id is currently nil")
-		return nil
+	func imageNameForType(type: ResourceType) -> String {
+		let scale = UIScreen.mainScreen().scale
+		return "\(id)-\(type.rawValue)@\(scale)x.png"
 	}
 
 	/**
@@ -143,18 +130,17 @@ class  Meme: NSObject, NSCoding {
 	}
 
 	func saveImage(image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL, asThumbnail: Bool = false) -> Bool {
-		if let name = imageNameForType(type) {
-			if asThumbnail {
-				// TODO: convert to thumbnail
-			}
-			let data = UIImagePNGRepresentation(image)
-			let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
-			if data.writeToURL(url, atomically: true) {
-				Meme.cache.setObject(image, forKey: name)
-				return true
-			}
-			println("Error saving image: \(url)")
+		let name = imageNameForType(type)
+		if asThumbnail {
+			// TODO: convert to thumbnail
 		}
+		let data = UIImagePNGRepresentation(image)
+		let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
+		if data.writeToURL(url, atomically: true) {
+			Meme.cache.setObject(image, forKey: name)
+			return true
+		}
+		println("Error saving image: \(url)")
 		return false
 	}
 

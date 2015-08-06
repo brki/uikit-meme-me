@@ -160,7 +160,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	func setActionButtonStatus() {
 		let imagePresent = imageView.image != nil
-		let memeSaved = meme?.id != nil
+		let memeSaved = meme != nil
 		shareButton.enabled = imagePresent
 		trashButton.enabled = imagePresent && memeSaved
 		saveButton.enabled = imagePresent && dirtyMeme
