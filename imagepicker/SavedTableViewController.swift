@@ -73,9 +73,9 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("savedMeme") as! UITableViewCell
 		let meme = memeList[indexPath.row]
-		let image = meme.image(Meme.ResourceType.MemeThumbnail)
+		let image = meme.image(Meme.ResourceType.MemeThumbnailSmall)
 		if let imageView = cell.contentView.viewWithTag(TableCellTag.imageView.rawValue) as? UIImageView {
-			imageView.image = meme.image(Meme.ResourceType.MemeThumbnail)
+			imageView.image = meme.image(Meme.ResourceType.MemeThumbnailSmall)
 		}
 		if let topText = cell.contentView.viewWithTag(TableCellTag.topText.rawValue) as? UILabel {
 			topText.text = meme.topText

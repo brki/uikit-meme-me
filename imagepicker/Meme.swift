@@ -9,16 +9,23 @@
 import UIKit
 
 class  Meme: NSObject, NSCoding {
-	var id: String?
-	var topText: String
-	var bottomText: String
+
 
 	enum ResourceType: String {
 		case Source = "source"
 		case Meme = "meme"
-		case MemeThumbnail = "meme-thumbnail"
+		case MemeThumbnailSmall = "meme-thumbnail-small"
+		case MemeThumbnailLarge = "meme-thumbnail-large"
 		case Texts = "texts"
+
 	}
+
+	static let cache = NSCache()
+
+	var id: String?
+	var topText: String
+	var bottomText: String
+
 
 	/**
 	Provides the URL of the directory to use for storing images for the current meme.
@@ -63,6 +70,17 @@ class  Meme: NSObject, NSCoding {
 		)
 	}
 
+	deinit {
+		// Clear any items from the cache.
+		if id != nil {
+			for type in [ResourceType.Source, ResourceType.Meme, ResourceType.MemeThumbnailSmall, ResourceType.MemeThumbnailLarge] {
+				if let name = imageNameForType(type) {
+					Meme.cache.removeObjectForKey(name)
+				}
+			}
+		}
+	}
+
 	/**
 	NSCoding encodeWithCoder()
 	*/
@@ -77,10 +95,16 @@ class  Meme: NSObject, NSCoding {
 	*/
 	func image(type: ResourceType) -> UIImage?
 	{
-		if let name = imageNameForType(type),
-			let baseUrl = resourceURL,
-			let imageFile = baseUrl.URLByAppendingPathComponent(name).path {
-				return UIImage(contentsOfFile: imageFile)
+		if let name = imageNameForType(type) {
+			if let image = Meme.cache.objectForKey(name) as? UIImage {
+				return image
+			}
+			if let baseUrl = resourceURL, let imageFile = baseUrl.URLByAppendingPathComponent(name).path {
+				if let image = UIImage(contentsOfFile: imageFile) {
+					Meme.cache.setObject(image, forKey: name)
+					return image
+				}
+			}
 		}
 		return nil
 	}
@@ -89,7 +113,8 @@ class  Meme: NSObject, NSCoding {
 	*/
 	func imageNameForType(type: ResourceType) -> String? {
 		if let id = id {
-			return id + "-" + type.rawValue + ".png"
+			let scale = UIScreen.mainScreen().scale
+			return "\(id)-\(type.rawValue)@\(scale)x.png"
 		}
 		println("id is currently nil")
 		return nil
@@ -111,7 +136,7 @@ class  Meme: NSObject, NSCoding {
 			return (
 				saveImage(originalImage, ofType: .Source, withBaseUrl: url) &&
 				saveImage(memeImage, ofType: .Meme, withBaseUrl: url) &&
-				saveImage(memeImage, ofType: .MemeThumbnail, withBaseUrl: url, asThumbnail: true)
+				saveImage(memeImage, ofType: .MemeThumbnailSmall, withBaseUrl: url, asThumbnail: true)
 			)
 		}
 		return false
@@ -125,6 +150,7 @@ class  Meme: NSObject, NSCoding {
 			let data = UIImagePNGRepresentation(image)
 			let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
 			if data.writeToURL(url, atomically: true) {
+				Meme.cache.setObject(image, forKey: name)
 				return true
 			}
 			println("Error saving image: \(url)")
