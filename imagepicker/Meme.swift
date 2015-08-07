@@ -17,7 +17,6 @@ class  Meme: NSObject, NSCoding {
 		case MemeThumbnailSmall = "meme-thumbnail-small"
 		case MemeThumbnailLarge = "meme-thumbnail-large"
 		case Texts = "texts"
-
 	}
 
 	static let cache = NSCache()
@@ -25,6 +24,8 @@ class  Meme: NSObject, NSCoding {
 	var id: String!
 	var topText: String
 	var bottomText: String
+	let smallThumbnailSize = CGSize(width: 65, height: 65)
+	var largeThumbnailSize = CGSize(width: 120, height: 120)
 
 
 	/**
@@ -123,16 +124,19 @@ class  Meme: NSObject, NSCoding {
 			return (
 				saveImage(originalImage, ofType: .Source, withBaseUrl: url) &&
 				saveImage(memeImage, ofType: .Meme, withBaseUrl: url) &&
-				saveImage(memeImage, ofType: .MemeThumbnailSmall, withBaseUrl: url, asThumbnail: true)
+				saveImage(memeImage, ofType: .MemeThumbnailSmall, withBaseUrl: url) &&
+				saveImage(memeImage, ofType: .MemeThumbnailLarge, withBaseUrl: url)
 			)
 		}
 		return false
 	}
 
-	func saveImage(image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL, asThumbnail: Bool = false) -> Bool {
+	func saveImage(var image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL, asThumbnail: Bool = false) -> Bool {
 		let name = imageNameForType(type)
-		if asThumbnail {
-			// TODO: convert to thumbnail
+		if type == .MemeThumbnailSmall || type == .MemeThumbnailLarge {
+			if let  resizedImage = thumbNailImage(image, ofType: type) {
+				image = resizedImage
+			}
 		}
 		let data = UIImagePNGRepresentation(image)
 		let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
@@ -142,6 +146,23 @@ class  Meme: NSObject, NSCoding {
 		}
 		println("Error saving image: \(url)")
 		return false
+	}
+
+	func thumbNailImage(image: UIImage, ofType type: ResourceType) -> UIImage? {
+		var targetSize: CGSize?
+		if type == .MemeThumbnailSmall {
+			targetSize = smallThumbnailSize
+		} else if type == .MemeThumbnailLarge {
+			targetSize = largeThumbnailSize
+		} else {
+			println("Unexpected type received: \(type)")
+			return nil
+		}
+		if let size = targetSize {
+			return image.scaledToFitSize(size, withScreenScale: UIScreen.mainScreen().scale)
+		}
+		println("Size not set for type: \(type)")
+		return image
 	}
 
 
