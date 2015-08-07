@@ -19,14 +19,12 @@ class  Meme: NSObject, NSCoding {
 		case Texts = "texts"
 	}
 
+	// A cache shared by all Meme instances:
 	static let cache = NSCache()
 
 	var id: String!
 	var topText: String
 	var bottomText: String
-	let smallThumbnailSize = CGSize(width: 65, height: 65)
-	var largeThumbnailSize = CGSize(width: 120, height: 120)
-
 
 	/**
 	Provides the URL of the directory to use for storing images for the current meme.
@@ -134,7 +132,7 @@ class  Meme: NSObject, NSCoding {
 	func saveImage(var image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL, asThumbnail: Bool = false) -> Bool {
 		let name = imageNameForType(type)
 		if type == .MemeThumbnailSmall || type == .MemeThumbnailLarge {
-			if let  resizedImage = thumbNailImage(image, ofType: type) {
+			if let resizedImage = thumbNailImage(image, ofType: type) {
 				image = resizedImage
 			}
 		}
@@ -151,18 +149,16 @@ class  Meme: NSObject, NSCoding {
 	func thumbNailImage(image: UIImage, ofType type: ResourceType) -> UIImage? {
 		var targetSize: CGSize?
 		if type == .MemeThumbnailSmall {
-			targetSize = smallThumbnailSize
+			targetSize = Constants.MemeImageSizes.smallThumbnail
 		} else if type == .MemeThumbnailLarge {
-			targetSize = largeThumbnailSize
+			targetSize = Constants.MemeImageSizes.largeThumbnail
+		}
+		if let size = targetSize {
+			return image.scaledToFitSize(size, withScreenScale: UIScreen.mainScreen().scale)
 		} else {
 			println("Unexpected type received: \(type)")
 			return nil
 		}
-		if let size = targetSize {
-			return image.scaledToFitSize(size, withScreenScale: UIScreen.mainScreen().scale)
-		}
-		println("Size not set for type: \(type)")
-		return image
 	}
 
 

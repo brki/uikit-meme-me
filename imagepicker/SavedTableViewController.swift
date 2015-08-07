@@ -20,7 +20,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		case bottomText = 3
 	}
 
-	let tableCellHeight = CGFloat(65 + 6) // ImageView height as defined in storyboard + a bit of padding.
+	let tableCellHeight = CGFloat(Constants.MemeImageSizes.smallThumbnail.height + 6)
 
 	override func viewDidLoad() {
 		tableView.delegate = self
