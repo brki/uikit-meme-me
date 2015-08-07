@@ -239,6 +239,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			} else {
 				meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
 			}
+			// TODO: background processing for this.
 			if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
 				if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
 					dirtyMeme = false

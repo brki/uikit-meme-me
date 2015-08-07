@@ -129,34 +129,58 @@ class  Meme: NSObject, NSCoding {
 		return false
 	}
 
-	func saveImage(var image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL, asThumbnail: Bool = false) -> Bool {
+	func saveImage(an_image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL) -> Bool {
 		let name = imageNameForType(type)
-		if type == .MemeThumbnailSmall || type == .MemeThumbnailLarge {
-			if let resizedImage = thumbNailImage(image, ofType: type) {
-				image = resizedImage
+		if let image = sizedImage(an_image, ofType: type) {
+			let data = UIImagePNGRepresentation(image)
+			let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
+			if data.writeToURL(url, atomically: true) {
+				Meme.cache.setObject(image, forKey: name)
+				return true
 			}
 		}
-		let data = UIImagePNGRepresentation(image)
-		let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
-		if data.writeToURL(url, atomically: true) {
-			Meme.cache.setObject(image, forKey: name)
-			return true
-		}
-		println("Error saving image: \(url)")
+		println("Error saving image")
 		return false
+	}
+
+	func cacheImage(an_image: UIImage, ofType type: ResourceType) {
+		let name = imageNameForType(type)
+		if let image = sizedImage(an_image, ofType: type) {
+			Meme.cache.setObject(image, forKey: name)
+		}
+	}
+
+	/**
+	Gets the appropriately sized image based on the image and the type.
+	
+	If the type is a thumbnail type, a thumbnail image is generated and returned.
+	Otherwise, the original image is returned.
+	*/
+	func sizedImage(image: UIImage, ofType type: ResourceType) -> UIImage? {
+		if type == ResourceType.MemeThumbnailSmall || type == ResourceType.MemeThumbnailLarge {
+			return thumbNailImage(image, ofType: type)
+		} else {
+			return image
+		}
 	}
 
 	func thumbNailImage(image: UIImage, ofType type: ResourceType) -> UIImage? {
 		var targetSize: CGSize?
-		if type == .MemeThumbnailSmall {
-			targetSize = Constants.MemeImageSizes.smallThumbnail
-		} else if type == .MemeThumbnailLarge {
-			targetSize = Constants.MemeImageSizes.largeThumbnail
-		}
-		if let size = targetSize {
+		if let size = sizeForThumbnailType(type) {
 			return image.scaledToFitSize(size, withScreenScale: UIScreen.mainScreen().scale)
 		} else {
 			println("Unexpected type received: \(type)")
+			return nil
+		}
+	}
+
+	func sizeForThumbnailType(type: ResourceType) -> CGSize? {
+		switch type {
+		case ResourceType.MemeThumbnailSmall:
+			return Constants.MemeImageSizes.smallThumbnail
+		case ResourceType.MemeThumbnailLarge:
+			return Constants.MemeImageSizes.largeThumbnail
+		default:
 			return nil
 		}
 	}

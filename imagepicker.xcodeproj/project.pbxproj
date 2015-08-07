@@ -20,6 +20,7 @@
 		D32519821B6E4AA100EFC535 /* SavedCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32519811B6E4AA100EFC535 /* SavedCollectionViewController.swift */; };
 		D32519841B6FE19600EFC535 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32519831B6FE19600EFC535 /* DetailViewController.swift */; };
 		D34BC2011B7492CD005B5C04 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34BC2001B7492CD005B5C04 /* Constants.swift */; };
+		D3E374F91B75256500A6D397 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E374F71B75256500A6D397 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		D32519811B6E4AA100EFC535 /* SavedCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedCollectionViewController.swift; sourceTree = "<group>"; };
 		D32519831B6FE19600EFC535 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		D34BC2001B7492CD005B5C04 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		D3E374F81B75256500A6D397 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				D34BC2001B7492CD005B5C04 /* Constants.swift */,
 				D325197D1B6533E400EFC535 /* Utilities.swift */,
 				D325197F1B6912B400EFC535 /* extension-UIImage.swift */,
+				D3E374F71B75256500A6D397 /* Main.storyboard */,
 				D3052D231B50FE39002449D8 /* Images.xcassets */,
 				D3052D251B50FE39002449D8 /* LaunchScreen.xib */,
 				D3052D1A1B50FE39002449D8 /* Supporting Files */,
@@ -213,6 +216,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3E374F91B75256500A6D397 /* Main.storyboard in Resources */,
 				D3052D271B50FE39002449D8 /* LaunchScreen.xib in Resources */,
 				D3052D241B50FE39002449D8 /* Images.xcassets in Resources */,
 			);
@@ -270,6 +274,14 @@
 				D3052D261B50FE39002449D8 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		D3E374F71B75256500A6D397 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3E374F81B75256500A6D397 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
