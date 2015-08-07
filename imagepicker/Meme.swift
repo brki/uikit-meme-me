@@ -143,6 +143,7 @@ class  Meme: NSObject, NSCoding {
 		return false
 	}
 
+	// TODO: probably remove:
 	func cacheImage(an_image: UIImage, ofType type: ResourceType) {
 		let name = imageNameForType(type)
 		if let image = sizedImage(an_image, ofType: type) {

@@ -17,9 +17,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet weak var topText: UITextField!
 	@IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var memeCanvas: UIView!
-	@IBOutlet weak var saveButton: UIBarButtonItem!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
-	@IBOutlet weak var trashButton: UIBarButtonItem!
+	@IBOutlet weak var cancelButton: UIBarButtonItem!
 
 	var meme: Meme?
     var memeCanvasDefaultCenterY: CGFloat?
@@ -28,12 +27,13 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	var keyboardHeight: CGFloat = 0
 	var isPresentingExistingMeme = false
 	var memeTransitionImage: UIImage?  // Image can be specified by pushing controller; will be shown in editor during push animation.
+	var saveOnExit = true
 
 	// Whether or not the meme has been changed since creation or last save:
 	var dirtyMeme = false {
 		didSet(oldValue) {
 			if oldValue != dirtyMeme {
-				setActionButtonStatus()
+				cancelButton.enabled = dirtyMeme
 			}
 		}
 	}
@@ -69,8 +69,9 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 				bottomText.text = meme.bottomText
 			}
 		}
-		setActionButtonStatus()
-		navigationItem.rightBarButtonItems = [saveButton, trashButton, shareButton]
+		cancelButton.enabled = dirtyMeme
+		shareButton.enabled = imageView.image != nil
+		navigationItem.rightBarButtonItems = [cancelButton, shareButton]
 		setTextFieldsHidden(true)
     }
 
@@ -80,6 +81,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
+		// TODO: it seems to be necessary to do this to handle situations where the image size changes (e.g. big image -> small image)
+		// setTextFieldsConstraints()
 		ensureActiveTextFieldVisible()
 	}
 
@@ -102,11 +105,19 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			}
 		}
 
-		let imagePresent = imageView.image != nil
-		if imagePresent {
-			setTextFieldsConstraints()
+		setTextFieldsConstraints()
+		setTextFieldsHidden(imageView.image == nil)
+	}
+
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		if isMovingFromParentViewController() {
+			// This ViewController is being popped off the stack.
+			if saveOnExit {
+				persistMeme()
+			}
+			saveOnExit = true
 		}
-		setTextFieldsHidden(!imagePresent)
 	}
 
 	@IBAction func pickImage(sender: UIBarButtonItem) {
@@ -123,10 +134,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		self.presentViewController(picker, animated: true, completion: nil)
 	}
 
-	@IBAction func saveMeme(sender: UIBarButtonItem) {
-		persistMeme()
-	}
-
 	@IBAction func shareMeme(sender: UIBarButtonItem) {
 		if let memeImage = persistMeme() {
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
@@ -135,35 +142,16 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	/**
-	Deletes the meme and returns to the previous view controller.
+	Set a flag to not save the meme before popping this VC off the stack.
 	*/
-	@IBAction func deleteMeme(sender: UIBarButtonItem) {
-		if let meme = meme {
-			let alertController = UIAlertController(title: "Delete Meme", message: "It will be gone for good. Are you sure?", preferredStyle: .Alert)
-			alertController.addAction(
-				UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction!) in
-					MemeList.sharedInstance.removeMeme(meme)
-					self.navigationController?.popToRootViewControllerAnimated(true)
-				})
-			)
-			alertController.addAction(
-				UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
-			)
-			presentViewController(alertController, animated: true, completion: nil)
-		}
+	@IBAction func cancelEdit(sender: UIBarButtonItem) {
+		saveOnExit = false
+		navigationController?.popViewControllerAnimated(true)
 	}
 
 	func setTextFieldsHidden(hidden: Bool) {
 		topText.hidden = hidden
 		bottomText.hidden = hidden
-	}
-
-	func setActionButtonStatus() {
-		let imagePresent = imageView.image != nil
-		let memeSaved = meme != nil
-		shareButton.enabled = imagePresent
-		trashButton.enabled = imagePresent && memeSaved
-		saveButton.enabled = imagePresent && dirtyMeme
 	}
 
 	/**
@@ -212,7 +200,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		return (verticalMargin: verticalMargin, horizontalMargin: horizontallMargin)
 	}
 
-
 	/**
 	Style the text fields.
 	*/
@@ -239,7 +226,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			} else {
 				meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
 			}
-			// TODO: background processing for this.
 			if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
 				if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
 					dirtyMeme = false
@@ -342,9 +328,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
 
 	func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-		if !dirtyMeme {
-			dirtyMeme = true
-		}
+		dirtyMeme = true
 		return true
 	}
 
