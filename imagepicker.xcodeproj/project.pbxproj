@@ -21,6 +21,7 @@
 		D32519841B6FE19600EFC535 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32519831B6FE19600EFC535 /* DetailViewController.swift */; };
 		D34BC2011B7492CD005B5C04 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34BC2001B7492CD005B5C04 /* Constants.swift */; };
 		D3E374F91B75256500A6D397 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E374F71B75256500A6D397 /* Main.storyboard */; };
+		D3E374FB1B77CEB000A6D397 /* MemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E374FA1B77CEB000A6D397 /* MemeNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		D32519831B6FE19600EFC535 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		D34BC2001B7492CD005B5C04 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D3E374F81B75256500A6D397 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D3E374FA1B77CEB000A6D397 /* MemeNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemeNavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				D3052D1C1B50FE39002449D8 /* AppDelegate.swift */,
+				D3E374FA1B77CEB000A6D397 /* MemeNavigationController.swift */,
 				D32519791B64E3DB00EFC535 /* SavedTableViewController.swift */,
 				D32519811B6E4AA100EFC535 /* SavedCollectionViewController.swift */,
 				D3052D1E1B50FE39002449D8 /* EditorViewController.swift */,
@@ -238,6 +241,7 @@
 			files = (
 				D32519841B6FE19600EFC535 /* DetailViewController.swift in Sources */,
 				D325197E1B6533E400EFC535 /* Utilities.swift in Sources */,
+				D3E374FB1B77CEB000A6D397 /* MemeNavigationController.swift in Sources */,
 				D325197A1B64E3DB00EFC535 /* SavedTableViewController.swift in Sources */,
 				D32519781B5A715800EFC535 /* Meme.swift in Sources */,
 				D3052D1F1B50FE39002449D8 /* EditorViewController.swift in Sources */,

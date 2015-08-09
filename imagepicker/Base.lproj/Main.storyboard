@@ -6,10 +6,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
+        <!--Meme Navigation Controller-->
         <scene sceneID="Ttd-ah-JpC">
             <objects>
-                <navigationController id="iru-Jh-hAD" sceneMemberID="viewController">
+                <navigationController id="iru-Jh-hAD" customClass="MemeNavigationController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="TableList" id="J2j-Dm-kHC" userLabel="Table-List"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="EQm-M2-yPJ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

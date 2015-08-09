@@ -8,8 +8,6 @@
 
 import UIKit
 
-// TODO perhaps: instead of save in memeeditor, have a cancel button, and auto-save when going back.
-
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var imageView: UIImageView!
@@ -109,14 +107,15 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		setTextFieldsHidden(imageView.image == nil)
 	}
 
-	override func viewWillDisappear(animated: Bool) {
-		super.viewWillDisappear(animated)
-		if isMovingFromParentViewController() {
-			// This ViewController is being popped off the stack.
-			if saveOnExit {
-				persistMeme()
-			}
-			saveOnExit = true
+	/**
+	Method called from the MemeNavigationController before this view controller is popped of the stack.
+	
+	At this point, it's still possible to update the on-screen views before taking a snapshot of the
+	view hierarchy.
+	*/
+	func viewControllerIsBeingPopped() {
+		if saveOnExit {
+			persistMeme()
 		}
 	}
 
