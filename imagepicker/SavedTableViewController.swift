@@ -12,7 +12,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 
 	@IBOutlet weak var tableView: UITableView!
 
-	var memeList: MemeList!
+	weak var memeList: MemeList!
 
 	enum TableCellTag: Int {
 		case imageView = 1

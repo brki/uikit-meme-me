@@ -21,7 +21,7 @@ class MemeNavigationController: UINavigationController {
 	to get the snapshot. Done from ``viewWilDisappear()``, the snapshot is taken, but it
 	seems the screen updates are not done.
 	
-	Calling the same code from ``popViewControllerAnimated``, in constrast,  allows hiding
+	Calling the same code from ``popViewControllerAnimated``, in constrast, allows hiding
     the cursor of the text field before the snapshot is taken.
 	*/
 	override func popViewControllerAnimated(animated: Bool) -> UIViewController? {

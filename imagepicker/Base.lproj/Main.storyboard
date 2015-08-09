@@ -181,9 +181,49 @@
                     <view key="view" contentMode="scaleToFill" id="TdY-DL-Yev">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="YbV-nu-3oy">
+                                <rect key="frame" x="16" y="0.0" width="568" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="lU1-W0-qdv">
+                                    <size key="itemSize" width="120" height="120"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="savedCollectionCell" id="z0m-aS-1Og" customClass="MemeCollectionViewCell" customModule="imagepicker" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jf0-bb-4UN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <outlet property="imageView" destination="Jf0-bb-4UN" id="bQq-rd-2WE"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="YbV-nu-3oy" secondAttribute="bottom" id="J09-Uc-oUh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="YbV-nu-3oy" secondAttribute="trailing" id="OpS-6Q-u3c"/>
+                            <constraint firstItem="YbV-nu-3oy" firstAttribute="top" secondItem="TdY-DL-Yev" secondAttribute="topMargin" id="a4N-ah-9c8"/>
+                            <constraint firstItem="YbV-nu-3oy" firstAttribute="leading" secondItem="TdY-DL-Yev" secondAttribute="leadingMargin" id="sjz-uI-HOD"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UQo-8N-cCe"/>
+                    <connections>
+                        <outlet property="collectionView" destination="YbV-nu-3oy" id="1uU-UG-UT5"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tTM-ts-8aY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
