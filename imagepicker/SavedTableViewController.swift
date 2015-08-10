@@ -23,6 +23,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 	let tableCellHeight = CGFloat(Constants.MemeImageSizes.smallThumbnail.height + 6)
 
 	override func viewDidLoad() {
+		super.viewDidLoad()
 		tableView.delegate = self
 		tableView.dataSource = self
 		memeList = MemeList.sharedInstance
@@ -31,6 +32,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 	override func viewWillAppear(animated: Bool) {
 		self.tabBarController!.tabBar.hidden = false
 		tableView.reloadData()
+		super.viewWillAppear(animated)
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
