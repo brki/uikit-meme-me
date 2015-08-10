@@ -23,10 +23,10 @@
             </objects>
             <point key="canvasLocation" x="-1164" y="27"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Meme Navigation Controller-->
         <scene sceneID="TNt-Nr-JjE">
             <objects>
-                <navigationController id="mnU-6t-eNT" sceneMemberID="viewController">
+                <navigationController id="mnU-6t-eNT" customClass="MemeNavigationController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="Collection" id="8hK-De-g8E"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="AlW-cW-xYG">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -43,7 +43,7 @@
         <!--Detail View Controller-->
         <scene sceneID="3Ob-9H-1A9">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="BXX-Sc-HOP" customClass="DetailViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="detailVC" hidesBottomBarWhenPushed="YES" id="BXX-Sc-HOP" customClass="DetailViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hj3-Hz-nd2"/>
                         <viewControllerLayoutGuide type="bottom" id="enr-DB-T0o"/>
@@ -85,7 +85,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sWC-Bh-6Um" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="281" y="770"/>
+            <point key="canvasLocation" x="282" y="1132"/>
         </scene>
         <!--Saved Table View Controller-->
         <scene sceneID="fvJ-yP-Dv7">
@@ -156,7 +156,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4j0-nV-Nyc">
-                        <barButtonItem key="rightBarButtonItem" title="New" id="3oS-2J-VfQ">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="3oS-2J-VfQ">
                             <connections>
                                 <segue destination="BYZ-38-t0r" kind="show" identifier="fromListToEditor" id="prM-mZ-89g"/>
                             </connections>
@@ -183,9 +183,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="YbV-nu-3oy">
-                                <rect key="frame" x="16" y="0.0" width="568" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="lU1-W0-qdv">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="2" id="lU1-W0-qdv">
                                     <size key="itemSize" width="120" height="120"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -215,14 +215,21 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="YbV-nu-3oy" secondAttribute="bottom" id="J09-Uc-oUh"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="YbV-nu-3oy" secondAttribute="trailing" id="OpS-6Q-u3c"/>
+                            <constraint firstAttribute="trailing" secondItem="YbV-nu-3oy" secondAttribute="trailing" id="OpS-6Q-u3c"/>
                             <constraint firstItem="YbV-nu-3oy" firstAttribute="top" secondItem="TdY-DL-Yev" secondAttribute="topMargin" id="a4N-ah-9c8"/>
-                            <constraint firstItem="YbV-nu-3oy" firstAttribute="leading" secondItem="TdY-DL-Yev" secondAttribute="leadingMargin" id="sjz-uI-HOD"/>
+                            <constraint firstItem="YbV-nu-3oy" firstAttribute="leading" secondItem="TdY-DL-Yev" secondAttribute="leading" id="sjz-uI-HOD"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="UQo-8N-cCe"/>
+                    <navigationItem key="navigationItem" id="UQo-8N-cCe">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Vt0-HO-Lrj">
+                            <connections>
+                                <segue destination="BYZ-38-t0r" kind="show" identifier="fromCollectionToEditor" id="Feq-k0-hEw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="YbV-nu-3oy" id="1uU-UG-UT5"/>
+                        <segue destination="BXX-Sc-HOP" kind="show" identifier="detailFromCollectionView" id="VL7-WY-Bk4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tTM-ts-8aY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -345,7 +352,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="956" y="27"/>
+            <point key="canvasLocation" x="1002" y="27"/>
         </scene>
     </scenes>
     <resources>
@@ -353,6 +360,7 @@
         <image name="TableList" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0DC-fs-XGA"/>
+        <segue reference="Feq-k0-hEw"/>
+        <segue reference="VL7-WY-Bk4"/>
     </inferredMetricsTieBreakers>
 </document>

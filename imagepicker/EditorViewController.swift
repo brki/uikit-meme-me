@@ -92,7 +92,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			memeCanvasDefaultCenterY = memeCanvas.center.y
 		}
 
-
 		if isPresentingExistingMeme {
 			isPresentingExistingMeme = false
 			if let meme = meme {

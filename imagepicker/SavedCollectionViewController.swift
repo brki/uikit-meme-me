@@ -11,6 +11,7 @@ import UIKit
 class SavedCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
 	weak var memeList: MemeList!
+	var selectedIndexPath: NSIndexPath?
 
 	@IBOutlet weak var collectionView: UICollectionView!
 
@@ -23,8 +24,28 @@ class SavedCollectionViewController: UIViewController, UICollectionViewDataSourc
 
 	override func viewWillAppear(animated: Bool) {
 		collectionView.reloadData()
+		self.tabBarController!.tabBar.hidden = false
 		super.viewWillAppear(animated)
 	}
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		// Hide the tab bar on the current controller's view before pushing, so that there's not an ugly animation
+		// of hiding the tab bar after the destination VC has appeared.
+		// The destination view controller has a storyboard property that hides the tabbar for it's view.
+		self.tabBarController!.tabBar.hidden = true
+		if let identifier = segue.identifier {
+			if identifier == "detailFromCollectionView" {
+				let detailVC = segue.destinationViewController as! DetailViewController
+				if let indexPath = selectedIndexPath {
+					detailVC.meme = memeList[indexPath.item]
+				}
+				selectedIndexPath = nil
+			}
+		}
+	}
+
+
+	// MARK: UICollectionView data source methods
 
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return memeList.list.count
@@ -35,5 +56,13 @@ class SavedCollectionViewController: UIViewController, UICollectionViewDataSourc
 		let meme = memeList[indexPath.item]
 		cell.imageView.image = meme.image(.MemeThumbnailLarge)
 		return cell
+	}
+
+
+	// MARK: UICollectionView delegate methods
+
+	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+		selectedIndexPath = indexPath
+		performSegueWithIdentifier("detailFromCollectionView", sender: self)
 	}
 }
