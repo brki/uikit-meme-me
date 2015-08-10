@@ -77,7 +77,7 @@ class MemeList {
 		if let index = indexOfMeme(meme) {
 			list[index] = meme
 		} else {
-			list.append(meme)
+			list.insert(meme, atIndex: 0)
 		}
 		persist()
 		return true
