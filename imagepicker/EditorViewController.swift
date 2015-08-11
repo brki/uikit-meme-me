@@ -79,8 +79,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		// TODO: it seems to be necessary to do this to handle situations where the image size changes (e.g. big image -> small image)
-		// setTextFieldsConstraints()
 		ensureActiveTextFieldVisible()
 	}
 
@@ -297,6 +295,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
 			imageView.image = image.scaledToFitImageView(imageView, withScreenScale:UIScreen.mainScreen().scale)
+			setTextFieldsConstraints()
 			dirtyMeme = true
         }
         dismissViewControllerAnimated(true, completion: nil)
