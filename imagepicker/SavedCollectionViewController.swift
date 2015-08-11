@@ -14,12 +14,14 @@ class SavedCollectionViewController: UIViewController, UICollectionViewDataSourc
 	var selectedIndexPath: NSIndexPath?
 
 	@IBOutlet weak var collectionView: UICollectionView!
+	@IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		collectionView.dataSource = self
 		collectionView.delegate = self
 		memeList = MemeList.sharedInstance
+		setFlowLayoutValues()
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -42,6 +44,22 @@ class SavedCollectionViewController: UIViewController, UICollectionViewDataSourc
 				selectedIndexPath = nil
 			}
 		}
+	}
+
+	/**
+	Sets the minimum inter-image spacing in row and the insets for the flow layout.
+	*/
+	func setFlowLayoutValues() {
+		let availableWidth = UIScreen.mainScreen().applicationFrame.width
+		let thumbnailWidth = Constants.MemeImageSizes.largeThumbnail.width
+		let extraSpace =  availableWidth % thumbnailWidth
+		// There is one more spacing-area than images in the row:
+		let spacingAreasPerRow = CGFloat(Int(availableWidth / thumbnailWidth) + 1)
+		let spacing = CGFloat(max(Int(extraSpace / spacingAreasPerRow), 1))
+		let edgeInsets = UIEdgeInsets(top: 2, left: spacing, bottom: 2, right: spacing)
+
+		flowLayout.minimumInteritemSpacing = spacing
+		flowLayout.sectionInset = edgeInsets
 	}
 
 

@@ -229,6 +229,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="YbV-nu-3oy" id="1uU-UG-UT5"/>
+                        <outlet property="flowLayout" destination="lU1-W0-qdv" id="QfU-x9-LQE"/>
                         <segue destination="BXX-Sc-HOP" kind="show" identifier="detailFromCollectionView" id="VL7-WY-Bk4"/>
                     </connections>
                 </viewController>
