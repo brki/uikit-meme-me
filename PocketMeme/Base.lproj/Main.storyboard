@@ -9,7 +9,7 @@
         <!--Meme Navigation Controller-->
         <scene sceneID="Ttd-ah-JpC">
             <objects>
-                <navigationController id="iru-Jh-hAD" customClass="MemeNavigationController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="iru-Jh-hAD" customClass="MemeNavigationController" customModule="PocketMeme" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="TableList" id="J2j-Dm-kHC" userLabel="Table-List"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="EQm-M2-yPJ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -26,7 +26,7 @@
         <!--Meme Navigation Controller-->
         <scene sceneID="TNt-Nr-JjE">
             <objects>
-                <navigationController id="mnU-6t-eNT" customClass="MemeNavigationController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="mnU-6t-eNT" customClass="MemeNavigationController" customModule="PocketMeme" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="Collection" id="8hK-De-g8E"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="AlW-cW-xYG">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -43,7 +43,7 @@
         <!--Detail View Controller-->
         <scene sceneID="3Ob-9H-1A9">
             <objects>
-                <viewController storyboardIdentifier="detailVC" hidesBottomBarWhenPushed="YES" id="BXX-Sc-HOP" customClass="DetailViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="detailVC" hidesBottomBarWhenPushed="YES" id="BXX-Sc-HOP" customClass="DetailViewController" customModule="PocketMeme" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hj3-Hz-nd2"/>
                         <viewControllerLayoutGuide type="bottom" id="enr-DB-T0o"/>
@@ -90,7 +90,7 @@
         <!--Saved Table View Controller-->
         <scene sceneID="fvJ-yP-Dv7">
             <objects>
-                <viewController id="9W2-vO-Lzd" customClass="SavedTableViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="9W2-vO-Lzd" customClass="SavedTableViewController" customModule="PocketMeme" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fNz-k7-RuQ"/>
                         <viewControllerLayoutGuide type="bottom" id="2ol-9D-HYk"/>
@@ -173,7 +173,7 @@
         <!--Saved Collection View Controller-->
         <scene sceneID="qOq-FS-4BE">
             <objects>
-                <viewController id="xO2-5t-Iv0" customClass="SavedCollectionViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="xO2-5t-Iv0" customClass="SavedCollectionViewController" customModule="PocketMeme" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Y3L-lT-lpn"/>
                         <viewControllerLayoutGuide type="bottom" id="5Zq-b8-10o"/>
@@ -192,7 +192,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="savedCollectionCell" id="z0m-aS-1Og" customClass="MemeCollectionViewCell" customModule="imagepicker" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="savedCollectionCell" id="z0m-aS-1Og" customClass="MemeCollectionViewCell" customModule="PocketMeme" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -259,7 +259,7 @@
         <!--Editor View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="BYZ-38-t0r" customClass="EditorViewController" customModule="imagepicker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="BYZ-38-t0r" customClass="EditorViewController" customModule="PocketMeme" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>

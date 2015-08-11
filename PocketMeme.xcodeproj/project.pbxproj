@@ -1,0 +1,477 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D33CE80E1B7A9F8200928127 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE7FF1B7A9F8200928127 /* AppDelegate.swift */; };
+		D33CE8101B7A9F8200928127 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8011B7A9F8200928127 /* Constants.swift */; };
+		D33CE8111B7A9F8200928127 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8021B7A9F8200928127 /* DetailViewController.swift */; };
+		D33CE8121B7A9F8200928127 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8031B7A9F8200928127 /* EditorViewController.swift */; };
+		D33CE8131B7A9F8200928127 /* extension-UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8041B7A9F8200928127 /* extension-UIImage.swift */; };
+		D33CE8141B7A9F8200928127 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8051B7A9F8200928127 /* Images.xcassets */; };
+		D33CE8151B7A9F8200928127 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8061B7A9F8200928127 /* Info.plist */; };
+		D33CE8161B7A9F8200928127 /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8071B7A9F8200928127 /* Meme.swift */; };
+		D33CE8171B7A9F8200928127 /* MemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8081B7A9F8200928127 /* MemeCollectionViewCell.swift */; };
+		D33CE8181B7A9F8200928127 /* MemeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8091B7A9F8200928127 /* MemeList.swift */; };
+		D33CE8191B7A9F8200928127 /* MemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80A1B7A9F8200928127 /* MemeNavigationController.swift */; };
+		D33CE81A1B7A9F8200928127 /* SavedCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80B1B7A9F8200928127 /* SavedCollectionViewController.swift */; };
+		D33CE81B1B7A9F8200928127 /* SavedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80C1B7A9F8200928127 /* SavedTableViewController.swift */; };
+		D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80D1B7A9F8200928127 /* Utilities.swift */; };
+		D33CE8201B7A9FDB00928127 /* PocketMemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */; };
+		D33CE8261B7AA03900928127 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8251B7AA03900928127 /* Info.plist */; };
+		D33CE82E1B7AA0C900928127 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D33CE82A1B7AA0C900928127 /* LaunchScreen.xib */; };
+		D33CE82F1B7AA0C900928127 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D33CE82C1B7AA0C900928127 /* Main.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D3052D2D1B50FE39002449D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D3052D0F1B50FE39002449D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3052D161B50FE39002449D8;
+			remoteInfo = PocketMeme;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D3052D171B50FE39002449D8 /* PocketMeme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketMeme.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3052D2C1B50FE39002449D8 /* PocketMemeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketMemeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D33CE7FF1B7A9F8200928127 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = PocketMeme/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8011B7A9F8200928127 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = PocketMeme/Constants.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8021B7A9F8200928127 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = PocketMeme/DetailViewController.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8031B7A9F8200928127 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditorViewController.swift; path = PocketMeme/EditorViewController.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8041B7A9F8200928127 /* extension-UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "extension-UIImage.swift"; path = "PocketMeme/extension-UIImage.swift"; sourceTree = SOURCE_ROOT; };
+		D33CE8051B7A9F8200928127 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketMeme/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		D33CE8061B7A9F8200928127 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PocketMeme/Info.plist; sourceTree = SOURCE_ROOT; };
+		D33CE8071B7A9F8200928127 /* Meme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = PocketMeme/Meme.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8081B7A9F8200928127 /* MemeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemeCollectionViewCell.swift; path = PocketMeme/MemeCollectionViewCell.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8091B7A9F8200928127 /* MemeList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemeList.swift; path = PocketMeme/MemeList.swift; sourceTree = SOURCE_ROOT; };
+		D33CE80A1B7A9F8200928127 /* MemeNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemeNavigationController.swift; path = PocketMeme/MemeNavigationController.swift; sourceTree = SOURCE_ROOT; };
+		D33CE80B1B7A9F8200928127 /* SavedCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SavedCollectionViewController.swift; path = PocketMeme/SavedCollectionViewController.swift; sourceTree = SOURCE_ROOT; };
+		D33CE80C1B7A9F8200928127 /* SavedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SavedTableViewController.swift; path = PocketMeme/SavedTableViewController.swift; sourceTree = SOURCE_ROOT; };
+		D33CE80D1B7A9F8200928127 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utilities.swift; path = PocketMeme/Utilities.swift; sourceTree = SOURCE_ROOT; };
+		D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PocketMemeTests.swift; path = PocketMemeTests/PocketMemeTests.swift; sourceTree = SOURCE_ROOT; };
+		D33CE8251B7AA03900928127 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PocketMemeTests/Info.plist; sourceTree = SOURCE_ROOT; };
+		D33CE82B1B7AA0C900928127 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PocketMeme/Base.lproj/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
+		D33CE82D1B7AA0C900928127 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = PocketMeme/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D3052D141B50FE39002449D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3052D291B50FE39002449D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D3052D0E1B50FE39002449D8 = {
+			isa = PBXGroup;
+			children = (
+				D3052D191B50FE39002449D8 /* PocketMeme */,
+				D3052D2F1B50FE39002449D8 /* PocketMeme Tests */,
+				D3052D181B50FE39002449D8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D3052D181B50FE39002449D8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D3052D171B50FE39002449D8 /* PocketMeme.app */,
+				D3052D2C1B50FE39002449D8 /* PocketMemeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D3052D191B50FE39002449D8 /* PocketMeme */ = {
+			isa = PBXGroup;
+			children = (
+				D33CE7FF1B7A9F8200928127 /* AppDelegate.swift */,
+				D33CE8011B7A9F8200928127 /* Constants.swift */,
+				D33CE8021B7A9F8200928127 /* DetailViewController.swift */,
+				D33CE8031B7A9F8200928127 /* EditorViewController.swift */,
+				D33CE8041B7A9F8200928127 /* extension-UIImage.swift */,
+				D33CE8051B7A9F8200928127 /* Images.xcassets */,
+				D33CE8071B7A9F8200928127 /* Meme.swift */,
+				D33CE8081B7A9F8200928127 /* MemeCollectionViewCell.swift */,
+				D33CE8091B7A9F8200928127 /* MemeList.swift */,
+				D33CE80A1B7A9F8200928127 /* MemeNavigationController.swift */,
+				D33CE80B1B7A9F8200928127 /* SavedCollectionViewController.swift */,
+				D33CE80C1B7A9F8200928127 /* SavedTableViewController.swift */,
+				D33CE80D1B7A9F8200928127 /* Utilities.swift */,
+				D33CE82A1B7AA0C900928127 /* LaunchScreen.xib */,
+				D33CE82C1B7AA0C900928127 /* Main.storyboard */,
+				D3052D1A1B50FE39002449D8 /* Supporting Files */,
+			);
+			name = PocketMeme;
+			path = PocketMeme;
+			sourceTree = "<group>";
+		};
+		D3052D1A1B50FE39002449D8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D33CE8061B7A9F8200928127 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3052D2F1B50FE39002449D8 /* PocketMeme Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */,
+				D3052D301B50FE39002449D8 /* Supporting Files */,
+			);
+			name = "PocketMeme Tests";
+			path = PocketMemeTests;
+			sourceTree = "<group>";
+		};
+		D3052D301B50FE39002449D8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D33CE8251B7AA03900928127 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D3052D161B50FE39002449D8 /* PocketMeme */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3052D361B50FE39002449D8 /* Build configuration list for PBXNativeTarget "PocketMeme" */;
+			buildPhases = (
+				D3052D131B50FE39002449D8 /* Sources */,
+				D3052D141B50FE39002449D8 /* Frameworks */,
+				D3052D151B50FE39002449D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PocketMeme;
+			productName = PocketMeme;
+			productReference = D3052D171B50FE39002449D8 /* PocketMeme.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D3052D2B1B50FE39002449D8 /* PocketMemeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3052D391B50FE39002449D8 /* Build configuration list for PBXNativeTarget "PocketMemeTests" */;
+			buildPhases = (
+				D3052D281B50FE39002449D8 /* Sources */,
+				D3052D291B50FE39002449D8 /* Frameworks */,
+				D3052D2A1B50FE39002449D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3052D2E1B50FE39002449D8 /* PBXTargetDependency */,
+			);
+			name = PocketMemeTests;
+			productName = PocketMemeTests;
+			productReference = D3052D2C1B50FE39002449D8 /* PocketMemeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D3052D0F1B50FE39002449D8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "truckin'";
+				TargetAttributes = {
+					D3052D161B50FE39002449D8 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					D3052D2B1B50FE39002449D8 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = D3052D161B50FE39002449D8;
+					};
+				};
+			};
+			buildConfigurationList = D3052D121B50FE39002449D8 /* Build configuration list for PBXProject "PocketMeme" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D3052D0E1B50FE39002449D8;
+			productRefGroup = D3052D181B50FE39002449D8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D3052D161B50FE39002449D8 /* PocketMeme */,
+				D3052D2B1B50FE39002449D8 /* PocketMemeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D3052D151B50FE39002449D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D33CE8141B7A9F8200928127 /* Images.xcassets in Resources */,
+				D33CE82E1B7AA0C900928127 /* LaunchScreen.xib in Resources */,
+				D33CE8151B7A9F8200928127 /* Info.plist in Resources */,
+				D33CE82F1B7AA0C900928127 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3052D2A1B50FE39002449D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D33CE8261B7AA03900928127 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D3052D131B50FE39002449D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D33CE81B1B7A9F8200928127 /* SavedTableViewController.swift in Sources */,
+				D33CE8111B7A9F8200928127 /* DetailViewController.swift in Sources */,
+				D33CE8191B7A9F8200928127 /* MemeNavigationController.swift in Sources */,
+				D33CE8181B7A9F8200928127 /* MemeList.swift in Sources */,
+				D33CE80E1B7A9F8200928127 /* AppDelegate.swift in Sources */,
+				D33CE81A1B7A9F8200928127 /* SavedCollectionViewController.swift in Sources */,
+				D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */,
+				D33CE8101B7A9F8200928127 /* Constants.swift in Sources */,
+				D33CE8161B7A9F8200928127 /* Meme.swift in Sources */,
+				D33CE8171B7A9F8200928127 /* MemeCollectionViewCell.swift in Sources */,
+				D33CE8131B7A9F8200928127 /* extension-UIImage.swift in Sources */,
+				D33CE8121B7A9F8200928127 /* EditorViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3052D281B50FE39002449D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D33CE8201B7A9FDB00928127 /* PocketMemeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D3052D2E1B50FE39002449D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3052D161B50FE39002449D8 /* PocketMeme */;
+			targetProxy = D3052D2D1B50FE39002449D8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D33CE82A1B7AA0C900928127 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D33CE82B1B7AA0C900928127 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		D33CE82C1B7AA0C900928127 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D33CE82D1B7AA0C900928127 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D3052D341B50FE39002449D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D3052D351B50FE39002449D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D3052D371B50FE39002449D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = PocketMeme/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = PocketMeme;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D3052D381B50FE39002449D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = PocketMeme/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = PocketMeme;
+			};
+			name = Release;
+		};
+		D3052D3A1B50FE39002449D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = PocketMemeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = PocketMemeTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketMeme.app/PocketMeme";
+			};
+			name = Debug;
+		};
+		D3052D3B1B50FE39002449D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = PocketMemeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = PocketMemeTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketMeme.app/PocketMeme";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D3052D121B50FE39002449D8 /* Build configuration list for PBXProject "PocketMeme" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3052D341B50FE39002449D8 /* Debug */,
+				D3052D351B50FE39002449D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3052D361B50FE39002449D8 /* Build configuration list for PBXNativeTarget "PocketMeme" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3052D371B50FE39002449D8 /* Debug */,
+				D3052D381B50FE39002449D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3052D391B50FE39002449D8 /* Build configuration list for PBXNativeTarget "PocketMemeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3052D3A1B50FE39002449D8 /* Debug */,
+				D3052D3B1B50FE39002449D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D3052D0F1B50FE39002449D8 /* Project object */;
+}
