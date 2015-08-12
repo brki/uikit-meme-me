@@ -116,7 +116,6 @@
 				D33CE82C1B7AA0C900928127 /* Main.storyboard */,
 				D3052D1A1B50FE39002449D8 /* Supporting Files */,
 			);
-			name = PocketMeme;
 			path = PocketMeme;
 			sourceTree = "<group>";
 		};
