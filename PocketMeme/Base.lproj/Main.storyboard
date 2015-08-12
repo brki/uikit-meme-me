@@ -118,13 +118,13 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RFt-fR-H5L" userLabel="Top Text">
                                                     <rect key="frame" x="77" y="-1" width="472" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jqo-nK-b8U" userLabel="Bottom Text">
                                                     <rect key="frame" x="77" y="23" width="472" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -304,16 +304,19 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="800" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5TV-2a-5FG">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="JWg-1X-Mko"/>
                                     <barButtonItem title="Library" id="ixo-q8-cTQ">
                                         <connections>
                                             <action selector="pickImage:" destination="BYZ-38-t0r" id="zNK-qZ-Sbp"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="New photo" id="q3t-z9-WgH">
+                                    <barButtonItem width="35" style="plain" systemItem="fixedSpace" id="g1m-aV-slD"/>
+                                    <barButtonItem systemItem="camera" id="q3t-z9-WgH">
                                         <connections>
                                             <action selector="takePhoto:" destination="BYZ-38-t0r" id="YPc-uv-D6K"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="z3d-Iq-jBw"/>
                                 </items>
                             </toolbar>
                         </subviews>
