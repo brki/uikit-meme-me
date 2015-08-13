@@ -17,15 +17,18 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet weak var memeCanvas: UIView!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
 	@IBOutlet weak var cancelButton: UIBarButtonItem!
+	@IBOutlet var canvasBottomConstraint: NSLayoutConstraint!
+	@IBOutlet weak var canvasTopConstraint: NSLayoutConstraint!
 
 	var meme: Meme?
-    var memeCanvasDefaultCenterY: CGFloat?
     var activeTextField: UITextField?
 	var textFieldConstraints = [NSLayoutConstraint]()
 	var keyboardHeight: CGFloat = 0
 	var isPresentingExistingMeme = false
 	var memeTransitionImage: UIImage?  // Image can be specified by pushing controller; will be shown in editor during push animation.
 	var saveOnExit = true
+
+	var currentCanvasVerticalOffset: CGFloat = 0
 
 	// Whether or not the meme has been changed since creation or last save:
 	var dirtyMeme = false {
@@ -42,6 +45,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
         topText.delegate = self
 		bottomText.delegate = self
         setDefaultTextAttributes()
+
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
 		notificationCenter.addObserver(self, selector: "keyboardSizeChanging:", name: UIKeyboardWillChangeFrameNotification, object: nil)
@@ -79,22 +83,15 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		ensureActiveTextFieldVisible()
 	}
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
-		// Record the original center position; this will be useful for calculating the amount to move the view when
-		// the keyboard appears, changes size, and disappears.
-		if memeCanvasDefaultCenterY == nil {
-			memeCanvasDefaultCenterY = memeCanvas.center.y
-		}
-
 		if isPresentingExistingMeme {
 			isPresentingExistingMeme = false
 			if let meme = meme {
 				if let image = meme.image(.Source) {
-					imageView.image = image.scaledToFitImageView(imageView, withScreenScale:UIScreen.mainScreen().scale)
+					imageView.image = image
 					memeTransitionImage = nil
 				}
 			}
@@ -114,6 +111,26 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if saveOnExit {
 			persistMeme()
 		}
+	}
+
+	/**
+	When the screen orientation changes:
+		* hide text fields before rotation
+		* after rotation, if an image is present:
+			* adjust the text field constraints
+			* show text fields again
+	*/
+	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+		let imagePresent = imageView.image != nil
+		setTextFieldsHidden(true)
+		activeTextField?.resignFirstResponder()   // TODO: see if there's a better way to handle this, so that the keyboard can stay visible, and the view is appropriately positioned.
+		coordinator.animateAlongsideTransition(nil, completion: { context in
+			if imagePresent {
+				self.setTextFieldsConstraints()
+				self.setTextFieldsHidden(false)
+			}
+		})
 	}
 
 	@IBAction func pickImage(sender: UIBarButtonItem) {
@@ -159,7 +176,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
 			let margins = imageMargins()
 			let verticalInset = margins.verticalMargin + 4
-			let textFieldWidth = image.size.width - 4
+			let textFieldWidth = image.size.width * margins.imageScale - 4
 			let topTextYPosition = NSLayoutConstraint(
 				item: topText, attribute: .Top,	relatedBy: .Equal, toItem: imageView, attribute: .Top,
 				multiplier: 1, constant: verticalInset
@@ -186,14 +203,16 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	Assumes that the image in centered in the image view.
 	*/
-	func imageMargins() -> (verticalMargin: CGFloat, horizontalMargin: CGFloat) {
+	func imageMargins() -> (verticalMargin: CGFloat, horizontalMargin: CGFloat, imageScale: CGFloat) {
 		var verticalMargin = CGFloat(0)
 		var horizontallMargin = CGFloat(0)
+		var imageScale = CGFloat(1)
 		if let image = imageView.image {
-			verticalMargin = (imageView.frame.height - image.size.height) / 2
-			horizontallMargin = (imageView.frame.width - image.size.width) / 2
+			imageScale = image.scaleToFitInRectOfSize(imageView.frame.size)
+			verticalMargin = (imageView.frame.height - image.size.height * imageScale) / 2
+			horizontallMargin = (imageView.frame.width - image.size.width * imageScale) / 2
 		}
-		return (verticalMargin: verticalMargin, horizontalMargin: horizontallMargin)
+		return (verticalMargin: verticalMargin, horizontalMargin: horizontallMargin, imageScale: imageScale)
 	}
 
 	/**
@@ -271,21 +290,34 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	The repositioning will be animated if ``animationDuration`` and ``animationCurve`` are provided.
 	*/
 	func ensureActiveTextFieldVisible(#animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
-		if let textField = activeTextField, let defaultY = memeCanvasDefaultCenterY {
-			let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
-			let keyboardTopY = view.frame.size.height - keyboardHeight
-			if keyboardTopY < textFieldBottomY {
-				var duration = NSTimeInterval(0)
-				var options: UIViewAnimationOptions = .TransitionNone
-				if let aDuration = animationDuration, aCurve = animationCurve {
-					duration = aDuration
-					options = aCurve
-				}
-
-				UIView.animateWithDuration(duration, delay: 0.0, options: options, animations: {
-					self.memeCanvas.center.y = defaultY - (textFieldBottomY - keyboardTopY)
-					}, completion: nil)
+		var offset: CGFloat = 0
+		if keyboardHeight == 0 {
+			if currentCanvasVerticalOffset != 0 {
+				offset = -currentCanvasVerticalOffset
 			}
+		} else {
+			if let textField = activeTextField {
+				let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
+				let keyboardTopY = view.frame.size.height - keyboardHeight
+				if keyboardTopY < textFieldBottomY {
+					offset = currentCanvasVerticalOffset + (textFieldBottomY - keyboardTopY)
+				}
+			}
+		}
+		if offset != currentCanvasVerticalOffset {
+			var duration = NSTimeInterval(0)
+			var options: UIViewAnimationOptions = .TransitionNone
+			if let aDuration = animationDuration, aCurve = animationCurve {
+				duration = aDuration
+				options = aCurve
+			}
+
+			UIView.animateWithDuration(duration, delay: 0.0, options: options, animations: {
+				self.canvasBottomConstraint.constant = offset
+				self.canvasTopConstraint.constant = offset
+				self.currentCanvasVerticalOffset = offset
+				self.view.setNeedsUpdateConstraints()
+				}, completion: nil)
 		}
 	}
 
@@ -294,7 +326,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-			imageView.image = image.scaledToFitImageView(imageView, withScreenScale:UIScreen.mainScreen().scale)
+			imageView.image = image
 			setTextFieldsConstraints()
 			dirtyMeme = true
         }
@@ -329,20 +361,18 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		return true
 	}
 
-
     // MARK: Keyboard notification handlers:
 
 	func keyboardSizeChanging(notification: NSNotification) {
-		keyboardHeight = 0
 		if let userInfo = notification.userInfo as [NSObject: AnyObject]? {
 			if let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue(),
 				let beginFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
 					let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
 					let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
 					keyboardHeight = endFrame.height
+					ensureActiveTextFieldVisible(animationDuration: animationDuration, animationCurve: animationOption)
 			}
 		}
-		// Let the view know that subviews need to be positioned again.  This will lead to ensureTextFieldVisible() being called.
-		view.setNeedsLayout()
 	}
+
 }

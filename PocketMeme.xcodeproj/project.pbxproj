@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D306755C1B7CE6FA00128EBD /* KeyboardSizeWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D306755B1B7CE6FA00128EBD /* KeyboardSizeWatcher.swift */; };
 		D33CE80E1B7A9F8200928127 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE7FF1B7A9F8200928127 /* AppDelegate.swift */; };
 		D33CE8101B7A9F8200928127 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8011B7A9F8200928127 /* Constants.swift */; };
 		D33CE8111B7A9F8200928127 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8021B7A9F8200928127 /* DetailViewController.swift */; };
 		D33CE8121B7A9F8200928127 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8031B7A9F8200928127 /* EditorViewController.swift */; };
 		D33CE8131B7A9F8200928127 /* extension-UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8041B7A9F8200928127 /* extension-UIImage.swift */; };
 		D33CE8141B7A9F8200928127 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8051B7A9F8200928127 /* Images.xcassets */; };
-		D33CE8151B7A9F8200928127 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8061B7A9F8200928127 /* Info.plist */; };
 		D33CE8161B7A9F8200928127 /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8071B7A9F8200928127 /* Meme.swift */; };
 		D33CE8171B7A9F8200928127 /* MemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8081B7A9F8200928127 /* MemeCollectionViewCell.swift */; };
 		D33CE8181B7A9F8200928127 /* MemeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE8091B7A9F8200928127 /* MemeList.swift */; };
@@ -23,8 +23,7 @@
 		D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80D1B7A9F8200928127 /* Utilities.swift */; };
 		D33CE8201B7A9FDB00928127 /* PocketMemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */; };
 		D33CE8261B7AA03900928127 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8251B7AA03900928127 /* Info.plist */; };
-		D33CE82E1B7AA0C900928127 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D33CE82A1B7AA0C900928127 /* LaunchScreen.xib */; };
-		D33CE82F1B7AA0C900928127 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D33CE82C1B7AA0C900928127 /* Main.storyboard */; };
+		D34DA7701B7D3B6500BDF49D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D34DA76E1B7D3B6500BDF49D /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +39,7 @@
 /* Begin PBXFileReference section */
 		D3052D171B50FE39002449D8 /* PocketMeme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketMeme.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3052D2C1B50FE39002449D8 /* PocketMemeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketMemeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D306755B1B7CE6FA00128EBD /* KeyboardSizeWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardSizeWatcher.swift; sourceTree = "<group>"; };
 		D33CE7FF1B7A9F8200928127 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = PocketMeme/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		D33CE8011B7A9F8200928127 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = PocketMeme/Constants.swift; sourceTree = SOURCE_ROOT; };
 		D33CE8021B7A9F8200928127 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = PocketMeme/DetailViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -57,7 +57,7 @@
 		D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PocketMemeTests.swift; path = PocketMemeTests/PocketMemeTests.swift; sourceTree = SOURCE_ROOT; };
 		D33CE8251B7AA03900928127 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PocketMemeTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		D33CE82B1B7AA0C900928127 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PocketMeme/Base.lproj/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
-		D33CE82D1B7AA0C900928127 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = PocketMeme/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		D34DA76F1B7D3B6500BDF49D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +104,7 @@
 				D33CE8021B7A9F8200928127 /* DetailViewController.swift */,
 				D33CE8031B7A9F8200928127 /* EditorViewController.swift */,
 				D33CE8041B7A9F8200928127 /* extension-UIImage.swift */,
+				D306755B1B7CE6FA00128EBD /* KeyboardSizeWatcher.swift */,
 				D33CE8051B7A9F8200928127 /* Images.xcassets */,
 				D33CE8071B7A9F8200928127 /* Meme.swift */,
 				D33CE8081B7A9F8200928127 /* MemeCollectionViewCell.swift */,
@@ -113,7 +114,7 @@
 				D33CE80C1B7A9F8200928127 /* SavedTableViewController.swift */,
 				D33CE80D1B7A9F8200928127 /* Utilities.swift */,
 				D33CE82A1B7AA0C900928127 /* LaunchScreen.xib */,
-				D33CE82C1B7AA0C900928127 /* Main.storyboard */,
+				D34DA76E1B7D3B6500BDF49D /* Main.storyboard */,
 				D3052D1A1B50FE39002449D8 /* Supporting Files */,
 			);
 			path = PocketMeme;
@@ -226,9 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D33CE8141B7A9F8200928127 /* Images.xcassets in Resources */,
-				D33CE82E1B7AA0C900928127 /* LaunchScreen.xib in Resources */,
-				D33CE8151B7A9F8200928127 /* Info.plist in Resources */,
-				D33CE82F1B7AA0C900928127 /* Main.storyboard in Resources */,
+				D34DA7701B7D3B6500BDF49D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +253,7 @@
 				D33CE80E1B7A9F8200928127 /* AppDelegate.swift in Sources */,
 				D33CE81A1B7A9F8200928127 /* SavedCollectionViewController.swift in Sources */,
 				D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */,
+				D306755C1B7CE6FA00128EBD /* KeyboardSizeWatcher.swift in Sources */,
 				D33CE8101B7A9F8200928127 /* Constants.swift in Sources */,
 				D33CE8161B7A9F8200928127 /* Meme.swift in Sources */,
 				D33CE8171B7A9F8200928127 /* MemeCollectionViewCell.swift in Sources */,
@@ -289,10 +289,10 @@
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
-		D33CE82C1B7AA0C900928127 /* Main.storyboard */ = {
+		D34DA76E1B7D3B6500BDF49D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D33CE82D1B7AA0C900928127 /* Base */,
+				D34DA76F1B7D3B6500BDF49D /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

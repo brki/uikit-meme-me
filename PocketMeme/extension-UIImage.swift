@@ -33,10 +33,9 @@ public extension UIImage {
 	Returns a scaled-down image if scaling down is necessary for image to fit in the provided size.
 	*/
 	func scaledToFitSize(size: CGSize, withScreenScale screenScale: CGFloat) -> UIImage? {
-		let verticalRatio = size.height / self.size.height
-		let horizontalRatio = size.width / self.size.width
-		let scale = min(1, min(horizontalRatio, verticalRatio))
+		// TODO: this let a = self somehow magically fixed a crash bug ... does it still happen without it?  If so, where / when / why?
 		let a = self
+		let scale = scaleToFitInRectOfSize(size)
 		if scale < 1 {
 			let rect = scaledRect(CGRect(origin: CGPointZero, size: self.size), scale: scale)
 			UIGraphicsBeginImageContextWithOptions(rect.size, true, screenScale)
@@ -46,6 +45,12 @@ public extension UIImage {
 			return scaledImage
 		}
 		return self
+	}
+
+	func scaleToFitInRectOfSize(size: CGSize) -> CGFloat {
+		let verticalRatio = size.height / self.size.height
+		let horizontalRatio = size.width / self.size.width
+		return min(1, min(horizontalRatio, verticalRatio))
 	}
 
 	func scaledRect(rect: CGRect, scale: CGFloat) -> CGRect {
