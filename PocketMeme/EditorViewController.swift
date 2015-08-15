@@ -115,20 +115,29 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	When the screen orientation changes:
-		* hide text fields before rotation
+		* hide text fields before rotation (because their animation is ugly)
+	    * hide the keyboard, if present (so that the correct offset view position can be calculated post-rotation)
 		* after rotation, if an image is present:
 			* adjust the text field constraints
 			* show text fields again
+	        * show the keyboard again, if it was present before
+	
+	There's an interesting post that explains how to make this all work even more smoothly,
+	but it seems like quite a bit of work, and might change with the next ios version:
+		* http://smnh.me/synchronizing-rotation-animation-between-the-keyboard-and-the-attached-view-part-2/
 	*/
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 		let imagePresent = imageView.image != nil
 		setTextFieldsHidden(true)
-		activeTextField?.resignFirstResponder()   // TODO: see if there's a better way to handle this, so that the keyboard can stay visible, and the view is appropriately positioned.
+		let wasActiveTextField = activeTextField
+		activeTextField?.resignFirstResponder()
 		coordinator.animateAlongsideTransition(nil, completion: { context in
 			if imagePresent {
 				self.setTextFieldsConstraints()
 				self.setTextFieldsHidden(false)
+				self.activeTextField = wasActiveTextField
+				self.activeTextField?.becomeFirstResponder()
 			}
 		})
 	}
@@ -148,6 +157,14 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	@IBAction func shareMeme(sender: UIBarButtonItem) {
+		// TODO: beahviour here ... user can cancel share.
+		// So: do not persist meme before it returns
+		// get meme image
+		// present activityVC
+		// if canceled:
+		//   back to editor
+		// else:
+		//   save meme and pop to root nav vc
 		if let memeImage = persistMeme() {
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
 			self.presentViewController(activityVC, animated: true, completion: nil)
@@ -280,10 +297,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		return nil
 	}
 
-	func ensureActiveTextFieldVisible() {
-		ensureActiveTextFieldVisible(animationDuration: nil, animationCurve: nil)
-	}
-
 	/**
 	If necessary, repositions the memeCanvas view so that the currently active text field is visible.
 
@@ -316,7 +329,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 				self.canvasBottomConstraint.constant = offset
 				self.canvasTopConstraint.constant = offset
 				self.currentCanvasVerticalOffset = offset
-				self.view.setNeedsUpdateConstraints()
+				//self.view.setNeedsUpdateConstraints()
 				}, completion: nil)
 		}
 	}
