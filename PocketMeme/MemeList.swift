@@ -69,19 +69,27 @@ class MemeList {
 
 	This also calls ``meme.persistImages()``
 	*/
-	func saveMeme(meme: Meme, originalImage: UIImage, memeImage: UIImage) -> Bool {
-		if !meme.persistImages(originalImage, memeImage: memeImage) {
-			println("Unable to persist meme images")
-			return false
-		}
+	func saveMeme(meme: Meme) {
 		if let index = indexOfMeme(meme) {
 			list[index] = meme
 		} else {
 			list.insert(meme, atIndex: 0)
 		}
 		persist()
-		return true
 	}
+//	func saveMeme(meme: Meme, originalImage: UIImage, memeImage: UIImage) -> Bool {
+//		if !meme.persistImages(originalImage, memeImage: memeImage) {
+//			println("Unable to persist meme images")
+//			return false
+//		}
+//		if let index = indexOfMeme(meme) {
+//			list[index] = meme
+//		} else {
+//			list.insert(meme, atIndex: 0)
+//		}
+//		persist()
+//		return true
+//	}
 
 	/**
 	Remove the given meme from persistent storage.

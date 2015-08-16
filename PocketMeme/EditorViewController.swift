@@ -6,6 +6,38 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
+
+/**
+Some optimization was made so that the application is more responsive.
+More specifically: saving the original image is a slow operation on 
+a real device (tested with iPhone 4s).  So, this is done in a background
+thread to a temporary directory.  All meme images are also saved initially
+to the temp directory.  The temp directory is moved to the permanent storage
+location when leaving the editor (which is quick).
+*/
+
+
+/** TODO: performance optimization, because saving the original image is slow.
+When image picked: save meme, including original image, in a background thread to a meme-name-temp directory.
+On cancel, discard temp directory.
+On non-cancel:
+  * persist meme-image and meme-texts to tmp dir
+  * move tmp dir to final dir name
+  * pop to (root?) vc.
+
+Also, look into NSURL bookmarks.
+
+Also, clean up tmp dir on app exit.
+*/
+
+
+// TODO: FIXME: on device (and simulator), with a photo as image (in portrait), when editing bottom text, and switch to icon kb, then back to normal kb,
+//              the text is no longer visible. (and image doesn't slide down after dismissing kb).
+
+// STILL TODO:
+// look into NSURL bookmarks.
+// clean up tmp dir on app exit.
+
 import UIKit
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
@@ -21,6 +53,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	@IBOutlet weak var canvasTopConstraint: NSLayoutConstraint!
 
 	var meme: Meme?
+	var shareMemeImage: UIImage?
     var activeTextField: UITextField?
 	var textFieldConstraints = [NSLayoutConstraint]()
 	var keyboardHeight: CGFloat = 0
@@ -46,7 +79,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		bottomText.delegate = self
         setDefaultTextAttributes()
 
-
         let notificationCenter = NSNotificationCenter.defaultCenter()
 		notificationCenter.addObserver(self, selector: "keyboardSizeChanging:", name: UIKeyboardWillChangeFrameNotification, object: nil)
     }
@@ -57,7 +89,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	Ensure that the appropriate elements are shown or hidden, and that the text fields are appropriately sized,
-	depending on whether or not an image is present, and whether or not the meme has already been saved.
+	depending on whether or not an image is present, and whether or not the meme already exists.
 	*/
     override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
@@ -69,6 +101,10 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 				}
 				topText.text = meme.topText
 				bottomText.text = meme.bottomText
+			}
+		} else {
+			if meme == nil {
+				meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
 			}
 		}
 		cancelButton.enabled = dirtyMeme
@@ -90,7 +126,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if isPresentingExistingMeme {
 			isPresentingExistingMeme = false
 			if let meme = meme {
-				if let image = meme.image(.Source) {
+				if let image = meme.image(.Source, fromStorageArea: .Permanent) {
 					imageView.image = image
 					memeTransitionImage = nil
 				}
@@ -108,9 +144,12 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	view hierarchy.
 	*/
 	func viewControllerIsBeingPopped() {
-		if saveOnExit {
-			persistMeme()
+		if saveOnExit, let meme = meme {
+			updateMemeWithCurrentState(nil)
+			meme.moveToPermanentStorage()
+			MemeList.sharedInstance.saveMeme(meme)
 		}
+		meme?.cleanTempStorage()
 	}
 
 	/**
@@ -157,18 +196,28 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	@IBAction func shareMeme(sender: UIBarButtonItem) {
-		// TODO: beahviour here ... user can cancel share.
-		// So: do not persist meme before it returns
-		// get meme image
-		// present activityVC
-		// if canceled:
-		//   back to editor
-		// else:
-		//   save meme and pop to root nav vc
-		if let memeImage = persistMeme() {
+		if dirtyMeme {
+			shareMemeImage = memeAsImage()
+		} else {
+			// TODO: This could come from temporary storage, too.
+			shareMemeImage = meme!.image(.Meme, fromStorageArea: .Permanent)
+		}
+		if let memeImage = shareMemeImage {
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
+			activityVC.completionWithItemsHandler = activityVCFinished
 			self.presentViewController(activityVC, animated: true, completion: nil)
 		}
+	}
+
+	func activityVCFinished(activityType: String!, completed: Bool, returnedItems: [AnyObject]!, error: NSError!) {
+		if completed, let meme = meme, let memeImage = shareMemeImage {
+			updateMemeWithCurrentState(shareMemeImage)
+			// TODO: is this necessary, or does viewControllerIsBeingPopped() handled this:
+			meme.moveToPermanentStorage()
+			MemeList.sharedInstance.saveMeme(meme)
+			self.navigationController?.popToRootViewControllerAnimated(true)
+		}
+		shareMemeImage = nil
 	}
 
 	/**
@@ -247,26 +296,18 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
 
 	/**
-	Saves the meme: writes the images and text to persistent storage.
+	Updates the meme data structure with the current text and meme image.
 	*/
-	func persistMeme() -> UIImage? {
-		if dirtyMeme {
-			let memeList = MemeList.sharedInstance
-			if let meme = meme {
-				meme.topText = topText.text
-				meme.bottomText = bottomText.text
-			} else {
-				meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
-			}
-			if let meme = meme, original = imageView.image, memeImage = memeAsImage() {
-				if memeList.saveMeme(meme, originalImage: original, memeImage: memeImage) {
-					dirtyMeme = false
-				} else {
-					println("Unable to persist meme")
-				}
-			}
+	func updateMemeWithCurrentState(var memeImage: UIImage?) {
+		if memeImage == nil {
+			memeImage = memeAsImage()
 		}
-		return meme?.image(.Meme)
+		if dirtyMeme, let meme = meme, let image = memeImage {
+			meme.topText = topText.text
+			meme.bottomText = bottomText.text
+			meme.persistMemeImage(image, toStorageArea: .Temporary)
+			dirtyMeme = false
+		}
 	}
 
 	/**
@@ -338,8 +379,12 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	// MARK: UIImagePickerControllerDelegate methods:
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, meme = meme {
 			imageView.image = image
+			let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+			dispatch_async(backgroundQueue, {
+				meme.persistOriginalImage(image, toStorageArea: .Temporary)
+			})
 			setTextFieldsConstraints()
 			dirtyMeme = true
         }

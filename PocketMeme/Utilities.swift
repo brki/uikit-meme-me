@@ -12,3 +12,7 @@ func documentDirectoryURL() -> NSURL {
 	let directories = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask) as! [NSURL]
 	return directories.last!
 }
+
+func tmpDirectoryURL() -> NSURL {
+	return NSURL.fileURLWithPath(NSTemporaryDirectory(), isDirectory: true)!
+}

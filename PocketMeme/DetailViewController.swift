@@ -8,6 +8,7 @@
 
 import UIKit
 
+// TODO: add a share button
 class DetailViewController: UIViewController {
 
 	@IBOutlet weak var imageView: UIImageView!
