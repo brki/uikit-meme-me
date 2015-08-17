@@ -87,7 +87,9 @@ class  Meme: NSObject, NSCoding {
 	}
 
 	/**
-	Fetches the image
+	Fetches the image.
+	
+	Looks for the image first in the cache, and then in the provided storageArea.
 	*/
 	func image(type: ResourceType, fromStorageArea storageArea: StorageArea = .Permanent) -> UIImage?
 	{
@@ -204,21 +206,35 @@ class  Meme: NSObject, NSCoding {
 		return false
 	}
 
+	/**
+	Move any items from the temp dir to the permanent dir.
+	*/
 	func moveToPermanentStorage() -> Bool {
-		// TODO: handle case where destination already exists
-		// TODO: handle non existance of temp dir
-		if let tempURL = resourceURL(forStorageArea: .Temporary), permanentURL = resourceURL(forStorageArea: .Permanent) {
+		if let tempURL = resourceURL(forStorageArea: .Temporary), permanentURL = resourceURL(forStorageArea: .Permanent), tempPath = tempURL.path {
 			let fileManager = NSFileManager.defaultManager()
-			// Remove any previous items there:
-			fileManager.removeItemAtURL(permanentURL, error: nil)
 			var error: NSError?
-			NSFileManager.defaultManager().moveItemAtURL(tempURL, toURL: permanentURL, error: &error)
-			if let err = error {
-				println("Error in moveToPermanentStorage: \(err)")
+			let files = fileManager.contentsOfDirectoryAtPath(tempPath, error: &error)
+			if error != nil{
+				println("Unable to get list of files in meme's temp dir")
 				return false
 			}
+			for filename: String in files as! [String] {
+				let destURL = permanentURL.URLByAppendingPathComponent(filename)
+				// Ignore an error trying to remove the item; this most likely means it didn't exist in the first place:
+				fileManager.removeItemAtURL(destURL, error: nil)
+				let sourceURL = tempURL.URLByAppendingPathComponent(filename)
+println(sourceURL)
+				fileManager.moveItemAtURL(sourceURL, toURL: destURL, error: &error)
+				if error != nil {
+					println("Unable to move item from \(sourceURL) to \(destURL)")
+					return false
+				}
+			}
+			return true
+		} else {
+			println("Error getting URLs for Temporary and Permanent storage locations")
+			return false
 		}
-		return true
 	}
 
 	func cleanTempStorage() {

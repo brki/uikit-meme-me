@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6G3-gZ-91M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6G3-gZ-91M">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -346,6 +346,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bottomText" destination="nfp-8X-hEb" id="lnj-tE-2Cc"/>
+                        <outlet property="bottomToolbar" destination="5TV-2a-5FG" id="hIW-oU-sEf"/>
                         <outlet property="cancelButton" destination="soO-Ub-kJK" id="nCT-kr-VhR"/>
                         <outlet property="canvasBottomConstraint" destination="W17-xr-mN5" id="Vfl-jI-C0F"/>
                         <outlet property="canvasTopConstraint" destination="06o-Rx-X59" id="NGm-JB-Y8d"/>
