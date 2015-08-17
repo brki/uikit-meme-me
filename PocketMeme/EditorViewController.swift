@@ -17,29 +17,12 @@ location when leaving the editor (which is quick).
 */
 
 
-/** TODO: performance optimization, because saving the original image is slow.
-When image picked: save meme, including original image, in a background thread to a meme-name-temp directory.
-On cancel, discard temp directory.
-On non-cancel:
-  * persist meme-image and meme-texts to tmp dir
-  * move tmp dir to final dir name
-  * pop to (root?) vc.
-
-Also, look into NSURL bookmarks.
-
-Also, clean up tmp dir on app exit.
-*/
-
-
-// TODO: FIXME: on device (and simulator), with a photo as image (in portrait), when editing bottom text, and switch to icon kb, then back to normal kb,
-//              the text is no longer visible. (and image doesn't slide down after dismissing kb).
-//              Also happens with device in landscape mode
 
 // TODO FIXME: bit weird to specify from controller where images should go (.Temporary, .Permanent).  What's a better way.
 
-// STILL TODO:
-// look into NSURL bookmarks.
-// clean up tmp dir on app exit.
+// TODO:
+// * look into NSURL bookmarks.
+// * clean up app/tmp/ dir on app exit.
 
 import UIKit
 
@@ -117,18 +100,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		setTextFieldsHidden(true)
     }
 
-	/**
-	When the text in a textbox shrinks, the views are layed out again, and it may be necessary to
-	reposition the memeCanvas view to ensure that the text field remains visible.
-	*/
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		println("viewDidLayoutSubviews")
-		if let tf = activeTextField {
-			println("textfieldframe: \(tf.frame)")
-		}
-	}
-
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		if isPresentingExistingMeme {
@@ -163,12 +134,10 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	/**
 	When the screen orientation changes:
 		* hide text fields before rotation (because their animation is ugly)
-	    * hide the keyboard, if present (so that the correct offset view position can be calculated post-rotation)
 		* after rotation, if an image is present:
 			* adjust the text field constraints
 			* show text fields again
-	        * show the keyboard again, if it was present before
-	
+
 	There's an interesting post that explains how to make this all work even more smoothly,
 	but it seems like quite a bit of work, and might change with the next ios version:
 		* http://smnh.me/synchronizing-rotation-animation-between-the-keyboard-and-the-attached-view-part-2/
@@ -176,27 +145,19 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 		let imagePresent = imageView.image != nil
-		UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
-		println("will rotate", UIDevice.currentDevice().orientation.rawValue)
 		isRotating = true
 		setTextFieldsHidden(true)
-//		let wasActiveTextField = activeTextField
-//		activeTextField?.resignFirstResponder()
 		coordinator.animateAlongsideTransition(nil, completion: { context in
-			println("did rotate", UIDevice.currentDevice().orientation.rawValue)
 			self.isRotating = false
 			if imagePresent {
+				// It is necessary to follow this order so that the textField's frame positions
+				// are correct when the post-rotation UIKeyboardWillChangeFrameNotification is received:
+				// 1. set constraints, 2. setNeedsUpdateConstraints, 3. layoutIfNeeded.
 				self.setTextFieldsConstraints()
 				self.view.setNeedsUpdateConstraints()
 				self.view.layoutIfNeeded()
 				self.setTextFieldsHidden(false)
-//				if let tf = wasActiveTextField {
-//					println("wasActiveTextField: \(tf.frame)")
-//				}
-//				self.activeTextField = wasActiveTextField
-//				self.activeTextField?.becomeFirstResponder()
 			}
-			UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
 		})
 	}
 
@@ -229,7 +190,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if dirtyMeme {
 			shareMemeImage = memeAsImage()
 		} else {
-			// TODO: This could come from temporary storage, too.
+			// TODO: This could come from temporary storage, too?
 			shareMemeImage = meme!.image(.Meme, fromStorageArea: .Permanent)
 		}
 		if let memeImage = shareMemeImage {
@@ -259,7 +220,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	func setTextFieldsConstraints() {
 		if let image = imageView.image {
-			println("setting text field constraints")
 			NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
 			let margins = imageMargins()
 			let verticalInset = margins.verticalMargin + 4
@@ -364,49 +324,13 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	The repositioning will be animated if ``animationDuration`` and ``animationCurve`` are provided.
 	*/
-	func ensureActiveTextFieldVisible(#keyboardHeight: CGFloat, keyboardYChange: CGFloat, animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
+	func ensureActiveTextFieldVisible(#keyboardHeight: CGFloat, animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
 
 		var offset: CGFloat = 0
 		if keyboardHeight > 0, let textField = activeTextField {
-//			println(textField.frame)
-//		if let textField = activeTextField {
-
-//			let keyboardTopY = view.frame.height - keyboardHeight
-//			let pic = memeCanvas.convertPoint(CGPoint(x: CGFloat(0), y: keyboardTopY), fromView: nil).y
-//			offset = (textField.frame.origin.y + textField.frame.height) - pic
-
-			println("tf frame in kb size handler: \(textField.frame)")
-
-			let textFieldBottomY = textField.convertPoint(CGPoint(x: CGFloat(0), y: textField.bounds.height), toView: nil).y
-			let z = memeCanvas.frame.height - textField.convertPoint(CGPoint(x: CGFloat(0), y: textField.bounds.height), toView: memeCanvas).y
-			offset = keyboardHeight - z - bottomToolbar.frame.height
-
-//			offset = textFieldBottomY - keyboardTopY
-//			offset = max(0, textFieldBottomY - keyboardTopY + bottomToolbar.frame.height + currentCanvasVerticalOffset)
-
-			// textFieldBottomY is the y position
-//			let textFieldBottomY = textField.convertPoint(CGPoint(x: CGFloat(0), y: textField.bounds.height), toView: memeCanvas).y - bottomToolbar.frame.height
-//			let keyboardTopY = view.convertPoint(CGPoint(x: CGFloat(0), y: view.bounds.height), toView: nil).y - keyboardHeight
-//			let adjustment = keyboardTopY - textFieldBottomY + currentCanvasVerticalOffset
-//			offset = adjustment
-
-//			if keyboardTopY < textFieldBottomY {
-//				offset = currentCanvasVerticalOffset + (textFieldBottomY - keyboardTopY)
-//			}
-
-
-//			if currentCanvasVerticalOffset == 0 {
-//				// The keyboard has just appeared.  Calculate how much, if any, it's necessary to move the canvas view
-//				// so that the active text field is visible.
-//				let textFieldBottomY = memeCanvas.frame.origin.y + textField.frame.origin.y + textField.frame.size.height
-//				let keyboardTopY = view.frame.size.height - keyboardHeight
-//				if keyboardTopY < textFieldBottomY {
-//					offset = currentCanvasVerticalOffset + (textFieldBottomY - keyboardTopY)
-//				}
-//			} else {
-//				// The keyboard did not disappear nor appear, but did change it's height.
-//				offset = currentCanvasVerticalOffset - keyboardYChange
-//			}
+			let textFieldRelativeBottom = textField.convertPoint(CGPoint(x: CGFloat(0), y: textField.bounds.height), toView: memeCanvas).y
+			let textFieldRelativeOffset = memeCanvas.frame.height - textFieldRelativeBottom
+			offset = max(0, keyboardHeight - textFieldRelativeOffset - bottomToolbar.frame.height)
 		}
 
 		if offset != currentCanvasVerticalOffset {
@@ -416,6 +340,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 				duration = aDuration
 				options = aCurve
 			}
+
+			// TODO: would be nice if this animates after rotation: it doesn't seem to:
 
 			UIView.animateWithDuration(duration, delay: 0.0, options: options, animations: {
 				self.setCanvasVConstraintsOffset(offset)
@@ -495,8 +421,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 					let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
 					let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
 					let keyboardHeight = view.bounds.height - convertedEndFrame.origin.y
-					let change = convertedEndFrame.height - convertedBeginFrame.height
-					ensureActiveTextFieldVisible(keyboardHeight: keyboardHeight, keyboardYChange: change, animationDuration: animationDuration, animationCurve: animationOption)
+					ensureActiveTextFieldVisible(keyboardHeight: keyboardHeight, animationDuration: animationDuration, animationCurve: animationOption)
 			}
 		}
 	}

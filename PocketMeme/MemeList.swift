@@ -77,19 +77,6 @@ class MemeList {
 		}
 		persist()
 	}
-//	func saveMeme(meme: Meme, originalImage: UIImage, memeImage: UIImage) -> Bool {
-//		if !meme.persistImages(originalImage, memeImage: memeImage) {
-//			println("Unable to persist meme images")
-//			return false
-//		}
-//		if let index = indexOfMeme(meme) {
-//			list[index] = meme
-//		} else {
-//			list.insert(meme, atIndex: 0)
-//		}
-//		persist()
-//		return true
-//	}
 
 	/**
 	Remove the given meme from persistent storage.

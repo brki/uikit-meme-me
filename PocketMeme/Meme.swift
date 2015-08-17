@@ -223,7 +223,6 @@ class  Meme: NSObject, NSCoding {
 				// Ignore an error trying to remove the item; this most likely means it didn't exist in the first place:
 				fileManager.removeItemAtURL(destURL, error: nil)
 				let sourceURL = tempURL.URLByAppendingPathComponent(filename)
-println(sourceURL)
 				fileManager.moveItemAtURL(sourceURL, toURL: destURL, error: &error)
 				if error != nil {
 					println("Unable to move item from \(sourceURL) to \(destURL)")
