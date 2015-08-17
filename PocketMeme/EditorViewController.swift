@@ -180,8 +180,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		println("will rotate", UIDevice.currentDevice().orientation.rawValue)
 		isRotating = true
 		setTextFieldsHidden(true)
-		let wasActiveTextField = activeTextField
-		activeTextField?.resignFirstResponder()
+//		let wasActiveTextField = activeTextField
+//		activeTextField?.resignFirstResponder()
 		coordinator.animateAlongsideTransition(nil, completion: { context in
 			println("did rotate", UIDevice.currentDevice().orientation.rawValue)
 			self.isRotating = false
@@ -193,8 +193,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 //				if let tf = wasActiveTextField {
 //					println("wasActiveTextField: \(tf.frame)")
 //				}
-				self.activeTextField = wasActiveTextField
-				self.activeTextField?.becomeFirstResponder()
+//				self.activeTextField = wasActiveTextField
+//				self.activeTextField?.becomeFirstResponder()
 			}
 			UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
 		})
@@ -483,6 +483,10 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     // MARK: Keyboard notification handlers:
 
 	func keyboardSizeChanging(notification: NSNotification) {
+		if isRotating {
+			// No need to handle notifications during rotation
+			return
+		}
 		if let userInfo = notification.userInfo as [NSObject: AnyObject]? {
 			if let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue(),
 				let beginFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
@@ -492,10 +496,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 					let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
 					let keyboardHeight = view.bounds.height - convertedEndFrame.origin.y
 					let change = convertedEndFrame.height - convertedBeginFrame.height
-
-					if !isRotating {
-						ensureActiveTextFieldVisible(keyboardHeight: keyboardHeight, keyboardYChange: change, animationDuration: animationDuration, animationCurve: animationOption)
-					}
+					ensureActiveTextFieldVisible(keyboardHeight: keyboardHeight, keyboardYChange: change, animationDuration: animationDuration, animationCurve: animationOption)
 			}
 		}
 	}
