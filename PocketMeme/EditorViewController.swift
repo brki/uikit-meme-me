@@ -28,14 +28,13 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	@IBOutlet weak var bottomTextWidthConstraint: NSLayoutConstraint!
 	@IBOutlet weak var bottomTextBottomToImageViewBottomConstraint: NSLayoutConstraint!
 
-	var meme: Meme?
-    var activeTextField: UITextField?
-	var isPresentingExistingMeme = false
+	var meme: Meme?  // Pushing VC can set this if an existing meme should be used.
+	var activeTextField: UITextField?  // Text field currently being edited.
+	var isPresentingExistingMeme = false  // Pushing VC can set this if an existing meme should be used.
 	var memeTransitionImage: UIImage?  // Image can be specified by pushing controller; will be shown in editor during push animation.
 	var saveOnExit = true
 	var isRotating = false
-
-	var currentCanvasVerticalOffset: CGFloat = 0
+	var currentCanvasVerticalOffset: CGFloat = 0  // Keeps track of the canvas constraint offset, to see if the constraints need to be changed when KB size notifications handled.
 
 	// Whether or not the meme has been changed since creation or last save:
 	var dirtyMeme = false {
@@ -231,14 +230,14 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	/**
 	Style the text fields.
 	*/
-    func setDefaultTextAttributes() {
-        var memeTextAttributes = self.topText.defaultTextAttributes
-        memeTextAttributes[NSFontAttributeName] = UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)
-        memeTextAttributes[NSForegroundColorAttributeName] = UIColor.whiteColor()
-        memeTextAttributes[NSStrokeColorAttributeName] = UIColor.blackColor()
-        memeTextAttributes[NSStrokeWidthAttributeName] = -0.3
-        memeTextAttributes[NSObliquenessAttributeName] = 0.1
-        self.topText.defaultTextAttributes = memeTextAttributes
+	func setDefaultTextAttributes() {
+		var memeTextAttributes = self.topText.defaultTextAttributes
+		memeTextAttributes[NSFontAttributeName] = UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)
+		memeTextAttributes[NSForegroundColorAttributeName] = UIColor.whiteColor()
+		memeTextAttributes[NSStrokeColorAttributeName] = UIColor.blackColor()
+		memeTextAttributes[NSStrokeWidthAttributeName] = -0.3
+		memeTextAttributes[NSObliquenessAttributeName] = 0.1
+		self.topText.defaultTextAttributes = memeTextAttributes
 		self.bottomText.defaultTextAttributes = memeTextAttributes
     }
 
