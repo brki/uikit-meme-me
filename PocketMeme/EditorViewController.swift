@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
-// TODO: tap outside of firstresponder closes keyboard.
-
 import UIKit
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
@@ -183,7 +181,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if dirtyMeme {
 			shareMemeImage = memeAsImage()
 		} else {
-			// TODO: This could come from temporary storage, too?
 			shareMemeImage = meme!.image(.Meme, fromStorageArea: .Permanent)
 		}
 		if let memeImage = shareMemeImage {
@@ -275,6 +272,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		updateMemeWithCurrentState(image)
 		meme.moveToPermanentStorage()
 		MemeList.sharedInstance.saveMeme(meme)
+		dirtyMeme = false
 	}
 
 	/**
@@ -288,7 +286,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			meme.topText = topText.text
 			meme.bottomText = bottomText.text
 			meme.persistMemeImage(image, toStorageArea: .Temporary)
-			dirtyMeme = false
 		}
 	}
 

@@ -8,7 +8,6 @@
 
 import UIKit
 
-// TODO: add a share button
 class DetailViewController: UIViewController {
 
 	@IBOutlet weak var imageView: UIImageView!
@@ -45,8 +44,6 @@ class DetailViewController: UIViewController {
 			presentViewController(alertController, animated: true, completion: nil)
 		}
 	}
-
-	// TODO: add a share-meme button / action here, too.
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		if let id = segue.identifier where id == "toEditorFromDetail" {
