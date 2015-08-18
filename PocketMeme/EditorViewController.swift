@@ -6,11 +6,6 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
-// TODO FIXME: bit weird to specify from controller where images should go (.Temporary, .Permanent).  What's a better way.
-
-// TODO:
-// * look into NSURL bookmarks.
-
 import UIKit
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
