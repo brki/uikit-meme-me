@@ -66,8 +66,6 @@ class MemeList {
 
 	/**
 	Saves the provided meme to persistent storage.
-
-	This also calls ``meme.persistImages()``
 	*/
 	func saveMeme(meme: Meme) {
 		if let index = indexOfMeme(meme) {
