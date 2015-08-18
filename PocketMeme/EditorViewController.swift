@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
+// TODO: tap outside of firstresponder closes keyboard.
+
 import UIKit
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {

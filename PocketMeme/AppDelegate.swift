@@ -34,7 +34,7 @@ This app was only designed for / tested on iPhone, not iPad.
 * Cache is used in an effort to keep the images in memory.
 
 * The editor is rotateable with a keyboard present (perhaps isn't too special,
-  but took me a lot of work to get it to work).
+  but took a lot of time to get it to work).
 
 */
 

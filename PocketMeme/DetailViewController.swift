@@ -46,6 +46,8 @@ class DetailViewController: UIViewController {
 		}
 	}
 
+	// TODO: add a share-meme button / action here, too.
+
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		if let id = segue.identifier where id == "toEditorFromDetail" {
 			let editorVC = segue.destinationViewController as! EditorViewController
