@@ -114,7 +114,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	view hierarchy.
 	*/
 	func viewControllerIsBeingPopped() {
-		if saveOnExit, let meme = meme {
+		if saveOnExit && dirtyMeme, let meme = meme {
 			persistMemeWithImage(meme, image: nil)
 		}
 		meme?.cleanTempStorage()
