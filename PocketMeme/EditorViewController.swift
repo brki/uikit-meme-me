@@ -111,9 +111,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	func viewControllerIsBeingPopped() {
 		if saveOnExit, let meme = meme {
-			updateMemeWithCurrentState(nil)
-			meme.moveToPermanentStorage()
-			MemeList.sharedInstance.saveMeme(meme)
+			persistMemeWithImage(meme, image: nil)
 		}
 		meme?.cleanTempStorage()
 	}
@@ -243,6 +241,16 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
         self.topText.defaultTextAttributes = memeTextAttributes
 		self.bottomText.defaultTextAttributes = memeTextAttributes
     }
+
+	/**
+	Persists the meme and all it's images to permanent storage.
+	If no image is provided, an image is generated from the current imageView and text fields.
+	*/
+	func persistMemeWithImage(meme: Meme, image: UIImage? = nil) {
+		updateMemeWithCurrentState(nil)
+		meme.moveToPermanentStorage()
+		MemeList.sharedInstance.saveMeme(meme)
+	}
 
 	/**
 	Updates the meme data structure with the current text and meme image.
