@@ -23,13 +23,6 @@ public extension UIImage {
 	}
 
 	/**
-	Return a scaled-down image if scaling down is necessary for image to fit in imageView.
-	*/
-	func scaledToFitImageView(imageView: UIImageView, withScreenScale screenScale: CGFloat) -> UIImage? {
-		return scaledToFitSize(imageView.frame.size, withScreenScale: screenScale)
-	}
-
-	/**
 	Returns a scaled-down image if scaling down is necessary for image to fit in the provided size.
 	*/
 	func scaledToFitSize(size: CGSize, withScreenScale screenScale: CGFloat) -> UIImage? {
