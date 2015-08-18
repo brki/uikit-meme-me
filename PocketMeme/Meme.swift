@@ -10,7 +10,6 @@ import UIKit
 
 class  Meme: NSObject, NSCoding {
 
-
 	enum ResourceType: String {
 		case Source = "source"
 		case Meme = "meme"
@@ -23,8 +22,15 @@ class  Meme: NSObject, NSCoding {
 		case Temporary, Permanent
 	}
 
-	// A cache shared by all Meme instances:
-	static let cache = NSCache()
+	// A cache shared by all Meme instances.
+	// The in-memory size of the images is used as a cache cost;
+	// the cache total limit is 200 MB (but can vary according to cache
+	// implementation details).
+	static let cache = {() -> NSCache in
+		let aCache = NSCache()
+		aCache.totalCostLimit = 200 * 1024 * 1024
+		return aCache
+		}()
 
 	var id: String!
 	var topText: String
@@ -56,6 +62,9 @@ class  Meme: NSObject, NSCoding {
 		self.id = id
 		self.topText = topText
 		self.bottomText = bottomText
+
+		// Have the
+		Meme.cache.totalCostLimit = 200 * 1024 * 1024
 		super.init()
 	}
 
@@ -100,6 +109,7 @@ class  Meme: NSObject, NSCoding {
 		if let baseUrl = resourceURL(forStorageArea: storageArea), let imageFile = baseUrl.URLByAppendingPathComponent(name).path {
 			if let image = UIImage(contentsOfFile: imageFile) {
 				Meme.cache.setObject(image, forKey: name)
+				Meme.cache.setObject(image, forKey: name, cost: cacheCostForImage(image))
 				return image
 			}
 		}
@@ -234,6 +244,14 @@ class  Meme: NSObject, NSCoding {
 			println("Error getting URLs for Temporary and Permanent storage locations")
 			return false
 		}
+	}
+
+	/**
+	Returns the in-memory size of the UIImage.
+	*/
+	func cacheCostForImage(uiImage: UIImage) -> Int {
+		let image = uiImage.CGImage
+		return CGImageGetBytesPerRow(image) * CGImageGetHeight(image)
 	}
 
 	func cleanTempStorage() {

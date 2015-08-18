@@ -6,23 +6,10 @@
 //  Copyright (c) 2015 truckin'. All rights reserved.
 //
 
-
-/**
-Some optimization was made so that the application is more responsive.
-More specifically: saving the original image is a slow operation on 
-a real device (tested with iPhone 4s).  So, this is done in a background
-thread to a temporary directory.  All meme images are also saved initially
-to the temp directory.  The temp directory is moved to the permanent storage
-location when leaving the editor (which is quick).
-*/
-
-
-
 // TODO FIXME: bit weird to specify from controller where images should go (.Temporary, .Permanent).  What's a better way.
 
 // TODO:
 // * look into NSURL bookmarks.
-// * clean up app/tmp/ dir on app exit.
 
 import UIKit
 
@@ -179,7 +166,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		func activityVCFinished(activityType: String!, completed: Bool, returnedItems: [AnyObject]!, error: NSError!) {
 			if completed, let meme = meme, let memeImage = shareMemeImage {
 				updateMemeWithCurrentState(shareMemeImage)
-				// TODO: is this necessary, or does viewControllerIsBeingPopped() handled this:
 				meme.moveToPermanentStorage()
 				MemeList.sharedInstance.saveMeme(meme)
 				navigationController?.popToRootViewControllerAnimated(true)
