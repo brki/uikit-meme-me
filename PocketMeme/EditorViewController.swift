@@ -206,6 +206,15 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		navigationController?.popViewControllerAnimated(true)
 	}
 
+	/**
+	Hide keyboard if user taps outside of active text field.
+	*/
+	@IBAction func viewTapped(sender: UITapGestureRecognizer) {
+		if let textField = activeTextField {
+			activeTextField?.resignFirstResponder()
+		}
+	}
+
 	func setTextFieldsHidden(hidden: Bool) {
 		topText.hidden = hidden
 		bottomText.hidden = hidden

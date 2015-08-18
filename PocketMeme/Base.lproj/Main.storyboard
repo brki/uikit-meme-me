@@ -271,8 +271,12 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xx2-Of-htz" userLabel="memeCanvas">
                                 <rect key="frame" x="0.0" y="64" width="600" height="448"/>
                                 <subviews>
-                                    <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="xQe-OL-RLp">
+                                    <imageView autoresizesSubviews="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="xQe-OL-RLp">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="448"/>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="Op6-Vm-fbx" appends="YES" id="r9K-qk-lfH"/>
+                                        </connections>
                                     </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="4Yk-aA-IlV" userLabel="Top Text">
                                         <rect key="frame" x="243" y="73" width="82" height="60"/>
@@ -294,6 +298,7 @@
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="4Yk-aA-IlV" firstAttribute="centerX" secondItem="xQe-OL-RLp" secondAttribute="centerX" id="52R-ch-VJp"/>
                                     <constraint firstItem="nfp-8X-hEb" firstAttribute="centerX" secondItem="xQe-OL-RLp" secondAttribute="centerX" id="EpW-3E-cwg"/>
@@ -366,6 +371,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Op6-Vm-fbx">
+                    <connections>
+                        <action selector="viewTapped:" destination="BYZ-38-t0r" id="XYe-Ih-Qtv"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1002" y="27"/>
         </scene>
