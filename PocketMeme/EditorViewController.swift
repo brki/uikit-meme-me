@@ -221,9 +221,9 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			let verticalInset = margins.verticalMargin + 4
 			let textFieldWidth = image.size.width * margins.imageScale - 4
 			topTextWidthConstraint.constant = textFieldWidth
-			topTextTopToImageViewTopConstraint.constant = verticalInset
 			bottomTextWidthConstraint.constant = textFieldWidth
-			bottomTextBottomToImageViewBottomConstraint.constant = -verticalInset
+			topTextTopToImageViewTopConstraint.constant = verticalInset
+			bottomTextBottomToImageViewBottomConstraint.constant = verticalInset
 		}
 	}
 
