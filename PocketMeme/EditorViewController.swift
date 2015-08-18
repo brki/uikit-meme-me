@@ -61,16 +61,19 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	/**
-	Ensure that the appropriate elements are shown or hidden, and that the text fields are appropriately sized,
-	depending on whether or not an image is present, and whether or not the meme already exists.
+	Ensure that the appropriate elements are shown or hidden, depending on whether or not an image is present.
+
+	If not already present, initialize self.meme.
 	*/
     override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
 		if isPresentingExistingMeme {
 			if let meme = meme {
+				// If a transition image (shown during VC-switching animation) was provided by the pushing VC, show it.
 				if let image = memeTransitionImage {
 					imageView.image = image
+					memeTransitionImage = nil
 				}
 				topText.text = meme.topText
 				bottomText.text = meme.bottomText
@@ -83,9 +86,14 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		cancelButton.enabled = dirtyMeme
 		shareButton.enabled = imageView.image != nil
 		navigationItem.rightBarButtonItems = [cancelButton, shareButton]
+
+		// Hide the text fields during the animation, they will be shown if needed in viewDidAppear.
 		setTextFieldsHidden(true)
     }
 
+	/**
+	Set the image from the meme, if presenting an existing meme.  If applicable, set the text field constraints.
+	*/
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		if isPresentingExistingMeme {
@@ -93,7 +101,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			if let meme = meme {
 				if let image = meme.image(.Source, fromStorageArea: .Permanent) {
 					imageView.image = image
-					memeTransitionImage = nil
 				}
 			}
 		}
@@ -145,6 +152,9 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		})
 	}
 
+	/**
+	Pick an image from the photo album.
+	*/
 	@IBAction func pickImage(sender: UIBarButtonItem) {
 		let picker = UIImagePickerController()
 		picker.delegate = self
@@ -152,6 +162,9 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		self.presentViewController(picker, animated: true, completion: nil)
 	}
 
+	/**
+	Take a photo to use as a meme.
+	*/
 	@IBAction func takePhoto(sender: UIBarButtonItem) {
 		let picker = UIImagePickerController()
 		picker.delegate = self
@@ -159,6 +172,11 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		presentViewController(picker, animated: true, completion: nil)
 	}
 
+	/**
+	Presents an activity view controller.
+	
+	If the activity view controller was not cancelled by the user, pop back to the navigation controller's root.
+	*/
 	@IBAction func shareMeme(sender: UIBarButtonItem) {
 
 		var shareMemeImage: UIImage?
@@ -180,9 +198,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		}
 	}
 
-
 	/**
-	Set a flag to not save the meme before popping this VC off the stack.
+	Set a flag to not save the meme, and pop this VC off the stack.
 	*/
 	@IBAction func cancelEdit(sender: UIBarButtonItem) {
 		saveOnExit = false
@@ -252,7 +269,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	/**
-	Updates the meme data structure with the current text and meme image.
+	Updates the meme with the current text and meme image.
 	*/
 	func updateMemeWithCurrentState(var memeImage: UIImage?) {
 		if memeImage == nil {
@@ -294,46 +311,14 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		return nil
 	}
 
-	/**
-	If necessary, repositions the memeCanvas view so that the currently active text field is visible.
-
-	The repositioning will be animated if ``animationDuration`` and ``animationCurve`` are provided.
-	*/
-	func ensureActiveTextFieldVisible(#keyboardHeight: CGFloat, animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
-
-		var offset: CGFloat = 0
-		if keyboardHeight > 0, let textField = activeTextField {
-			let textFieldRelativeBottom = textField.convertPoint(CGPoint(x: CGFloat(0), y: textField.bounds.height), toView: memeCanvas).y
-			let textFieldRelativeOffset = memeCanvas.frame.height - textFieldRelativeBottom
-			offset = max(0, keyboardHeight - textFieldRelativeOffset - bottomToolbar.frame.height)
-		}
-
-		if offset != currentCanvasVerticalOffset {
-			var duration = NSTimeInterval(0)
-			var options: UIViewAnimationOptions = .TransitionNone
-			if let aDuration = animationDuration, aCurve = animationCurve {
-				duration = aDuration
-				options = aCurve
-			}
-
-			// TODO: would be nice if this animates after rotation: it doesn't seem to:
-
-			UIView.animateWithDuration(duration, delay: 0.0, options: options, animations: {
-				self.setCanvasVConstraintsOffset(offset)
-				self.currentCanvasVerticalOffset = offset
-				self.view.setNeedsUpdateConstraints()
-				}, completion: nil)
-		}
-	}
-
-	func setCanvasVConstraintsOffset(offset: CGFloat) {
-		self.canvasBottomConstraint.constant = offset
-		self.canvasTopConstraint.constant = offset
-	}
-
 
 	// MARK: UIImagePickerControllerDelegate methods:
 
+	/**
+	When an image has been picked, set the imageView image and adjust text field constraints.
+	
+	Save the picked image to persistent storage, using a background thread so that the UI is not blocked waiting for that.
+	*/
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, meme = meme {
 			imageView.image = image
@@ -401,4 +386,35 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		}
 	}
 
+	/**
+	If necessary, repositions the memeCanvas view so that the currently active text field is visible.
+	
+	After rotation, the text field's frame will not be correct unless it's constraints have been updated, and self.view's constraints
+	and layout have been updated (see viewWillTransitionToSize() implementation).
+	*/
+	func ensureActiveTextFieldVisible(#keyboardHeight: CGFloat, animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
+
+		var offset: CGFloat = 0
+		if keyboardHeight > 0, let textField = activeTextField {
+			let textFieldRelativeBottom = textField.convertPoint(CGPoint(x: CGFloat(0), y: textField.bounds.height), toView: memeCanvas).y
+			let textFieldRelativeOffset = memeCanvas.frame.height - textFieldRelativeBottom
+			offset = max(0, keyboardHeight - textFieldRelativeOffset - bottomToolbar.frame.height)
+		}
+
+		if offset != currentCanvasVerticalOffset {
+			var duration = NSTimeInterval(0)
+			var options: UIViewAnimationOptions = .TransitionNone
+			if let aDuration = animationDuration, aCurve = animationCurve {
+				duration = aDuration
+				options = aCurve
+			}
+
+			UIView.animateWithDuration(duration, delay: 0.0, options: options, animations: {
+				self.canvasBottomConstraint.constant = offset
+				self.canvasTopConstraint.constant = offset
+				self.currentCanvasVerticalOffset = offset
+				self.view.setNeedsUpdateConstraints()
+				}, completion: nil)
+		}
+	}
 }
