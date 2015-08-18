@@ -246,7 +246,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	If no image is provided, an image is generated from the current imageView and text fields.
 	*/
 	func persistMemeWithImage(meme: Meme, image: UIImage? = nil) {
-		updateMemeWithCurrentState(nil)
+		updateMemeWithCurrentState(image)
 		meme.moveToPermanentStorage()
 		MemeList.sharedInstance.saveMeme(meme)
 	}
