@@ -278,8 +278,8 @@
                                             <outletCollection property="gestureRecognizers" destination="Op6-Vm-fbx" appends="YES" id="r9K-qk-lfH"/>
                                         </connections>
                                     </imageView>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="4Yk-aA-IlV" userLabel="Top Text">
-                                        <rect key="frame" x="243" y="73" width="82" height="60"/>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="4Yk-aA-IlV" userLabel="Top Text">
+                                        <rect key="frame" x="259" y="73" width="82" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="455-jZ-BPQ"/>
                                             <constraint firstAttribute="width" constant="82" id="cF0-CZ-chf"/>
@@ -287,8 +287,8 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" keyboardAppearance="alert"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="nfp-8X-hEb" userLabel="Bottom Text">
-                                        <rect key="frame" x="213" y="318" width="171" height="60"/>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="nfp-8X-hEb" userLabel="Bottom Text">
+                                        <rect key="frame" x="215" y="318" width="171" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="171" id="1M0-bz-3Ih"/>
                                             <constraint firstAttribute="height" constant="60" id="ntc-Kc-y4r"/>
