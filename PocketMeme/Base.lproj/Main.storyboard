@@ -274,17 +274,19 @@
                                     <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="xQe-OL-RLp">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="448"/>
                                     </imageView>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="4Yk-aA-IlV" userLabel="Top Text">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="4Yk-aA-IlV" userLabel="Top Text">
                                         <rect key="frame" x="243" y="73" width="82" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="455-jZ-BPQ"/>
+                                            <constraint firstAttribute="width" constant="82" id="cF0-CZ-chf"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" keyboardAppearance="alert"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="nfp-8X-hEb" userLabel="Bottom Text">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="800" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="nfp-8X-hEb" userLabel="Bottom Text">
                                         <rect key="frame" x="213" y="318" width="171" height="60"/>
                                         <constraints>
+                                            <constraint firstAttribute="width" constant="171" id="1M0-bz-3Ih"/>
                                             <constraint firstAttribute="height" constant="60" id="ntc-Kc-y4r"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
@@ -297,8 +299,10 @@
                                     <constraint firstItem="nfp-8X-hEb" firstAttribute="centerX" secondItem="xQe-OL-RLp" secondAttribute="centerX" id="EpW-3E-cwg"/>
                                     <constraint firstItem="xQe-OL-RLp" firstAttribute="top" secondItem="Xx2-Of-htz" secondAttribute="top" id="MC2-PL-HZU"/>
                                     <constraint firstAttribute="bottom" secondItem="xQe-OL-RLp" secondAttribute="bottom" id="QJv-yc-uOa"/>
+                                    <constraint firstItem="xQe-OL-RLp" firstAttribute="bottom" secondItem="nfp-8X-hEb" secondAttribute="bottom" constant="70" id="d3x-Wj-FWP"/>
                                     <constraint firstAttribute="trailing" secondItem="xQe-OL-RLp" secondAttribute="trailing" id="e3g-4j-j7Z"/>
                                     <constraint firstItem="xQe-OL-RLp" firstAttribute="leading" secondItem="Xx2-Of-htz" secondAttribute="leading" id="eL0-Jj-hDf"/>
+                                    <constraint firstItem="4Yk-aA-IlV" firstAttribute="top" secondItem="xQe-OL-RLp" secondAttribute="top" constant="73" id="sPd-bu-mgM"/>
                                 </constraints>
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalHuggingPriority="500" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="5TV-2a-5FG">
@@ -346,6 +350,8 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bottomText" destination="nfp-8X-hEb" id="lnj-tE-2Cc"/>
+                        <outlet property="bottomTextBottomToImageViewBottomConstraint" destination="d3x-Wj-FWP" id="jOh-WH-vOJ"/>
+                        <outlet property="bottomTextWidthConstraint" destination="1M0-bz-3Ih" id="l8K-8M-MFv"/>
                         <outlet property="bottomToolbar" destination="5TV-2a-5FG" id="hIW-oU-sEf"/>
                         <outlet property="cancelButton" destination="soO-Ub-kJK" id="nCT-kr-VhR"/>
                         <outlet property="canvasBottomConstraint" destination="W17-xr-mN5" id="Vfl-jI-C0F"/>
@@ -355,6 +361,8 @@
                         <outlet property="photoButton" destination="q3t-z9-WgH" id="CNf-jt-RLc"/>
                         <outlet property="shareButton" destination="fZL-Rc-qwO" id="MBh-hA-iHe"/>
                         <outlet property="topText" destination="4Yk-aA-IlV" id="uc4-eq-03s"/>
+                        <outlet property="topTextTopToImageViewTopConstraint" destination="sPd-bu-mgM" id="ySP-ig-VXo"/>
+                        <outlet property="topTextWidthConstraint" destination="cF0-CZ-chf" id="ahc-nb-6JT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

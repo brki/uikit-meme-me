@@ -19,14 +19,18 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet weak var memeCanvas: UIView!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
 	@IBOutlet weak var cancelButton: UIBarButtonItem!
-	@IBOutlet var canvasBottomConstraint: NSLayoutConstraint!
-	@IBOutlet weak var canvasTopConstraint: NSLayoutConstraint!
 	@IBOutlet weak var bottomToolbar: UIToolbar!
+
+	@IBOutlet weak var canvasBottomConstraint: NSLayoutConstraint!
+	@IBOutlet weak var canvasTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var topTextWidthConstraint: NSLayoutConstraint!
+	@IBOutlet weak var topTextTopToImageViewTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var bottomTextWidthConstraint: NSLayoutConstraint!
+	@IBOutlet weak var bottomTextBottomToImageViewBottomConstraint: NSLayoutConstraint!
 
 	var meme: Meme?
 	var shareMemeImage: UIImage?
     var activeTextField: UITextField?
-	var textFieldConstraints = [NSLayoutConstraint]()
 	var isPresentingExistingMeme = false
 	var memeTransitionImage: UIImage?  // Image can be specified by pushing controller; will be shown in editor during push animation.
 	var saveOnExit = true
@@ -203,28 +207,13 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	func setTextFieldsConstraints() {
 		if let image = imageView.image {
-			NSLayoutConstraint.deactivateConstraints(textFieldConstraints)
 			let margins = imageMargins()
 			let verticalInset = margins.verticalMargin + 4
 			let textFieldWidth = image.size.width * margins.imageScale - 4
-			let topTextYPosition = NSLayoutConstraint(
-				item: topText, attribute: .Top,	relatedBy: .Equal, toItem: imageView, attribute: .Top,
-				multiplier: 1, constant: verticalInset
-			)
-			let topTextWidth = NSLayoutConstraint(
-				item: topText, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,
-				multiplier: 1, constant: textFieldWidth
-			)
-			let bottomTextYPosition = NSLayoutConstraint(
-				item: bottomText, attribute: .Bottom,	relatedBy: .Equal, toItem: imageView, attribute: .Bottom,
-				multiplier: 1, constant: -verticalInset
-			)
-			let bottomTextWidth = NSLayoutConstraint(
-				item: bottomText, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute,
-				multiplier: 1, constant: textFieldWidth
-			)
-			textFieldConstraints = [topTextYPosition, topTextWidth, bottomTextYPosition, bottomTextWidth]
-			NSLayoutConstraint.activateConstraints(textFieldConstraints)
+			topTextWidthConstraint.constant = textFieldWidth
+			topTextTopToImageViewTopConstraint.constant = verticalInset
+			bottomTextWidthConstraint.constant = textFieldWidth
+			bottomTextBottomToImageViewBottomConstraint.constant = -verticalInset
 		}
 	}
 
