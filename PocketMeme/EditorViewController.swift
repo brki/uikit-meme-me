@@ -29,7 +29,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	@IBOutlet weak var bottomTextBottomToImageViewBottomConstraint: NSLayoutConstraint!
 
 	var meme: Meme?
-	var shareMemeImage: UIImage?
     var activeTextField: UITextField?
 	var isPresentingExistingMeme = false
 	var memeTransitionImage: UIImage?  // Image can be specified by pushing controller; will be shown in editor during push animation.
@@ -164,16 +163,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	@IBAction func shareMeme(sender: UIBarButtonItem) {
-		func activityVCFinished(activityType: String!, completed: Bool, returnedItems: [AnyObject]!, error: NSError!) {
-			if completed, let meme = meme, let memeImage = shareMemeImage {
-				updateMemeWithCurrentState(shareMemeImage)
-				meme.moveToPermanentStorage()
-				MemeList.sharedInstance.saveMeme(meme)
-				navigationController?.popToRootViewControllerAnimated(true)
-			}
-			shareMemeImage = nil
-		}
 
+		var shareMemeImage: UIImage?
 		if dirtyMeme {
 			shareMemeImage = memeAsImage()
 		} else {
@@ -182,7 +173,12 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		}
 		if let memeImage = shareMemeImage {
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
-			activityVC.completionWithItemsHandler = activityVCFinished
+			activityVC.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
+				if completed, let meme = self.meme, let memeImage = shareMemeImage {
+					self.persistMemeWithImage(meme, image: shareMemeImage)
+					self.navigationController?.popToRootViewControllerAnimated(true)
+				}
+			}
 			self.presentViewController(activityVC, animated: true, completion: nil)
 		}
 	}
