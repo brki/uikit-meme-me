@@ -71,15 +71,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func cleanTemporaryDirectory() {
 		let fileManager = NSFileManager.defaultManager()
 		var error: NSError?
-		let tempResources = fileManager.contentsOfDirectoryAtURL(tmpDirectoryURL(), includingPropertiesForKeys: [], options: nil, error: &error)
+		let tempResources: [AnyObject]?
+		do {
+			tempResources = try fileManager.contentsOfDirectoryAtURL(tmpDirectoryURL(), includingPropertiesForKeys: [], options: [])
+		} catch let error1 as NSError {
+			error = error1
+			tempResources = nil
+		}
 		if error != nil{
-			println("Unable to get list of resources in temp dir")
+			print("Unable to get list of resources in temp dir")
 			return
 		}
 		for url in tempResources as! [NSURL] {
-			fileManager.removeItemAtURL(url, error: &error)
+			do {
+				try fileManager.removeItemAtURL(url)
+			} catch let error1 as NSError {
+				error = error1
+			}
 			if error != nil {
-				println("Error removing resource from temp dir with url: \(url)")
+				print("Error removing resource from temp dir with url: \(url)")
 			}
 		}
 	}

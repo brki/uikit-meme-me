@@ -17,7 +17,9 @@ public extension UIImage {
 	*/
 	func crop(aRect: CGRect, screenScale: CGFloat) -> UIImage? {
 		let rect = scaledRect(aRect, scale: screenScale)
-		let cgImage = CGImageCreateWithImageInRect(self.CGImage, rect)
+		guard let cgImage = CGImageCreateWithImageInRect(self.CGImage, rect) else {
+			return nil
+		}
 		let croppedImage = UIImage(CGImage: cgImage, scale: screenScale, orientation: self.imageOrientation)
 		return croppedImage
 	}

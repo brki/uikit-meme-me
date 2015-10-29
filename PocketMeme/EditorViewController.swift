@@ -78,7 +78,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			}
 		} else {
 			if meme == nil {
-				meme = Meme(id: nil, topText: topText.text, bottomText: bottomText.text)
+				meme = Meme(id: nil, topText: topText.text ?? "", bottomText: bottomText.text ?? "")
 			}
 		}
 		cancelButton.enabled = dirtyMeme
@@ -187,7 +187,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
 			activityVC.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
 				if completed, let meme = self.meme, let memeImage = shareMemeImage {
-					self.persistMemeWithImage(meme, image: shareMemeImage)
+					self.persistMemeWithImage(meme, image: memeImage)
 					self.navigationController?.popToRootViewControllerAnimated(true)
 				}
 			}
@@ -208,7 +208,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
 	@IBAction func viewTapped(sender: UITapGestureRecognizer) {
 		if let textField = activeTextField {
-			activeTextField?.resignFirstResponder()
+			textField.resignFirstResponder()
 		}
 	}
 
@@ -283,8 +283,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			memeImage = memeAsImage()
 		}
 		if dirtyMeme, let meme = meme, let image = memeImage {
-			meme.topText = topText.text
-			meme.bottomText = bottomText.text
+			meme.topText = topText.text ?? ""
+			meme.bottomText = bottomText.text ?? ""
 			meme.persistMemeImage(image, toStorageArea: .Temporary)
 		}
 	}
@@ -293,7 +293,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	Captures the memeCanvas (scaled image and text fields) as an image.
 	*/
 	func memeAsImage() -> UIImage? {
-		if let image = imageView.image {
+		if imageView.image != nil {
 
 			// Hide the textFieldCursor during snapshot generation
 			let oldTextFieldTint = activeTextField?.tintColor
@@ -306,12 +306,12 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 			// Make the text field cursor visible again
 			if let oldTint = oldTextFieldTint {
-				activeTextField?.tintColor = oldTextFieldTint
+				activeTextField?.tintColor = oldTint
 			}
 
 			// Crop to remove any blank space around the image.
 			let margins = imageMargins()
-			let cropRect = imageView.bounds.rectByInsetting(dx: margins.horizontalMargin, dy: margins.verticalMargin)
+			let cropRect = imageView.bounds.insetBy(dx: margins.horizontalMargin, dy: margins.verticalMargin)
 			return image.crop(cropRect, screenScale: UIScreen.mainScreen().scale)
 		}
 		return nil
@@ -325,7 +325,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	
 	Save the picked image to persistent storage, using a background thread so that the UI is not blocked waiting for that.
 	*/
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, meme = meme {
 			imageView.image = image
 			let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
@@ -380,14 +380,12 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			return
 		}
 		if let userInfo = notification.userInfo as [NSObject: AnyObject]? {
-			if let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue(),
-				let beginFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-					let convertedEndFrame = view.convertRect(endFrame, fromView: view.window)
-					let convertedBeginFrame = view.convertRect(beginFrame, fromView: view.window)
-					let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
-					let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
-					let keyboardHeight = view.bounds.height - convertedEndFrame.origin.y
-					ensureActiveTextFieldVisible(keyboardHeight: keyboardHeight, animationDuration: animationDuration, animationCurve: animationOption)
+			if let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+				let convertedEndFrame = view.convertRect(endFrame, fromView: view.window)
+				let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double
+				let animationOption = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationOptions
+				let keyboardHeight = view.bounds.height - convertedEndFrame.origin.y
+				ensureActiveTextFieldVisible(keyboardHeight: keyboardHeight, animationDuration: animationDuration, animationCurve: animationOption)
 			}
 		}
 	}
@@ -398,7 +396,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	After rotation, the text field's frame will not be correct unless it's constraints have been updated, and self.view's constraints
 	and layout have been updated (see viewWillTransitionToSize() implementation).
 	*/
-	func ensureActiveTextFieldVisible(#keyboardHeight: CGFloat, animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
+	func ensureActiveTextFieldVisible(keyboardHeight keyboardHeight: CGFloat, animationDuration: NSTimeInterval?, animationCurve: UIViewAnimationOptions?) {
 
 		var offset: CGFloat = 0
 		if keyboardHeight > 0, let textField = activeTextField {

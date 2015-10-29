@@ -52,7 +52,7 @@ class  Meme: NSObject, NSCoding {
 	/**
 	NSCoding init()
 	*/
-	required convenience init(coder decoder: NSCoder) {
+	required convenience init?(coder decoder: NSCoder) {
 		self.init(
 			id: decoder.decodeObjectForKey("id") as! String?,
 			topText: decoder.decodeObjectForKey("topText") as! String,
@@ -127,15 +127,15 @@ class  Meme: NSObject, NSCoding {
 	*/
 	func saveImage(an_image: UIImage, ofType type: ResourceType, withBaseUrl baseUrl: NSURL, toStorageArea storageArea: StorageArea) -> Bool {
 		let name = imageNameForType(type)
-		if let image = sizedImage(an_image, ofType: type) {
-			let data = UIImagePNGRepresentation(image)
-			let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
-			if data.writeToURL(url, atomically: true) {
-				Meme.cache.setObject(image, forKey: name)
-				return true
-			}
+		if let image = sizedImage(an_image, ofType: type),
+			data = UIImagePNGRepresentation(image) {
+				let url = baseUrl.URLByAppendingPathComponent(name, isDirectory: false)
+				if data.writeToURL(url, atomically: true) {
+					Meme.cache.setObject(image, forKey: name)
+					return true
+				}
 		}
-		println("Error saving image")
+		print("Error saving image")
 		return false
 	}
 
@@ -154,11 +154,10 @@ class  Meme: NSObject, NSCoding {
 	}
 
 	func thumbNailImage(image: UIImage, ofType type: ResourceType) -> UIImage? {
-		var targetSize: CGSize?
 		if let size = sizeForThumbnailType(type) {
 			return image.scaledToFitSize(size, withScreenScale: UIScreen.mainScreen().scale)
 		} else {
-			println("Unexpected type received: \(type)")
+			print("Unexpected type received: \(type)")
 			return nil
 		}
 	}
@@ -182,10 +181,14 @@ class  Meme: NSObject, NSCoding {
 		let directoryURL = storageArea == .Temporary ? tmpDirectoryURL() : documentDirectoryURL()
 		let resourceURL = directoryURL.URLByAppendingPathComponent(id, isDirectory: true)
 		var error: NSError?
-		// Try to create the directory, if it doesn't already exist:
-		NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil, error: &error)
+		do {
+			// Try to create the directory, if it doesn't already exist:
+			try NSFileManager.defaultManager().createDirectoryAtURL(resourceURL, withIntermediateDirectories: true, attributes: nil)
+		} catch let error1 as NSError {
+			error = error1
+		}
 		if let err = error {
-			println("Unable to create directory for resource contents. Error: \(err.localizedDescription)")
+			print("Unable to create directory for resource contents. Error: \(err.localizedDescription)")
 		} else {
 			return resourceURL
 		}
@@ -199,9 +202,13 @@ class  Meme: NSObject, NSCoding {
 	func removePersistedData(forStorageArea storageArea: StorageArea = .Permanent) -> Bool {
 		if let url = resourceURL(forStorageArea: storageArea) {
 			var error: NSError?
-			NSFileManager.defaultManager().removeItemAtURL(url, error: &error)
+			do {
+				try NSFileManager.defaultManager().removeItemAtURL(url)
+			} catch let error1 as NSError {
+				error = error1
+			}
 			if let err = error {
-				println("Error trying to remove resources for id '\(id)': \(err)")
+				print("Error trying to remove resources for id '\(id)': \(err)")
 			} else {
 				return true
 			}
@@ -216,25 +223,38 @@ class  Meme: NSObject, NSCoding {
 		if let tempURL = resourceURL(forStorageArea: .Temporary), permanentURL = resourceURL(forStorageArea: .Permanent), tempPath = tempURL.path {
 			let fileManager = NSFileManager.defaultManager()
 			var error: NSError?
-			let files = fileManager.contentsOfDirectoryAtPath(tempPath, error: &error)
+			let files: [AnyObject]?
+			do {
+				files = try fileManager.contentsOfDirectoryAtPath(tempPath)
+			} catch let error1 as NSError {
+				error = error1
+				files = nil
+			}
 			if error != nil{
-				println("Unable to get list of files in meme's temp dir")
+				print("Unable to get list of files in meme's temp dir")
 				return false
 			}
 			for filename: String in files as! [String] {
 				let destURL = permanentURL.URLByAppendingPathComponent(filename)
-				// Ignore an error trying to remove the item; this most likely means it didn't exist in the first place:
-				fileManager.removeItemAtURL(destURL, error: nil)
+				do {
+					// Ignore an error trying to remove the item; this most likely means it didn't exist in the first place:
+					try fileManager.removeItemAtURL(destURL)
+				} catch _ {
+				}
 				let sourceURL = tempURL.URLByAppendingPathComponent(filename)
-				fileManager.moveItemAtURL(sourceURL, toURL: destURL, error: &error)
+				do {
+					try fileManager.moveItemAtURL(sourceURL, toURL: destURL)
+				} catch let error1 as NSError {
+					error = error1
+				}
 				if error != nil {
-					println("Unable to move item from \(sourceURL) to \(destURL)")
+					print("Unable to move item from \(sourceURL) to \(destURL)")
 					return false
 				}
 			}
 			return true
 		} else {
-			println("Error getting URLs for Temporary and Permanent storage locations")
+			print("Error getting URLs for Temporary and Permanent storage locations")
 			return false
 		}
 	}
@@ -252,7 +272,10 @@ class  Meme: NSObject, NSCoding {
 	*/
 	func cleanTempStorage() {
 		if let tempURL = resourceURL(forStorageArea: .Temporary) {
-			NSFileManager.defaultManager().removeItemAtURL(tempURL, error: nil)
+			do {
+				try NSFileManager.defaultManager().removeItemAtURL(tempURL)
+			} catch _ {
+			}
 		}
 	}
 }

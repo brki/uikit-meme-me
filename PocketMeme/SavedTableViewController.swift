@@ -43,7 +43,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		if let identifier = segue.identifier {
 			if identifier == "detailFromTableView" {
 				let detailVC = segue.destinationViewController as! DetailViewController
-				if let path = tableView.indexPathForSelectedRow() {
+				if let path = tableView.indexPathForSelectedRow {
 					detailVC.meme = memeList[path.row]
 				}
 			}
@@ -73,9 +73,8 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 	}
 
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("savedMeme") as! UITableViewCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("savedMeme")!
 		let meme = memeList[indexPath.row]
-		let image = meme.image(Meme.ResourceType.MemeThumbnailSmall)
 		if let imageView = cell.contentView.viewWithTag(TableCellTag.imageView.rawValue) as? UIImageView {
 			imageView.image = meme.image(Meme.ResourceType.MemeThumbnailSmall)
 		}

@@ -33,7 +33,7 @@ class DetailViewController: UIViewController {
 		if let meme = meme {
 			let alertController = UIAlertController(title: "Delete Meme", message: "It will be gone for good. Are you sure?", preferredStyle: .Alert)
 			alertController.addAction(
-				UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction!) in
+				UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction) in
 					MemeList.sharedInstance.removeMeme(meme)
 					self.navigationController?.popViewControllerAnimated(true)
 				})

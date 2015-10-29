@@ -35,12 +35,12 @@ class MemeList {
 	Load the persisted Memes into memory from storage.
     */
 	init() {
-		let dataUrl = dataURL
-		if NSFileManager.defaultManager().fileExistsAtPath(dataURL.path!) {
-			if let data = NSData(contentsOfURL: dataURL) {
+		let url = dataURL
+		if NSFileManager.defaultManager().fileExistsAtPath(url.path!) {
+			if let data = NSData(contentsOfURL: url) {
 				let decoder = NSKeyedUnarchiver(forReadingWithData: data)
 				let count = decoder.decodeIntForKey("listCount")
-				for i in 0 ..< count {
+				for _ in 0 ..< count {
 					if let memeInfo = decoder.decodeObject() as? Meme {
 						list.append(memeInfo)
 					}
@@ -100,10 +100,10 @@ class MemeList {
 	/**
 	Find the index in self.list of the given meme.
 	
-	:returns: Int index, or nil if not found
+	- returns: Int index, or nil if not found
 	*/
 	func indexOfMeme(meme: Meme) -> Int? {
-		for (index, storedMeme) in enumerate(list) {
+		for (index, storedMeme) in list.enumerate() {
 			if storedMeme.id == meme.id {
 				return index
 			}
