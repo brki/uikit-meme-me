@@ -21,7 +21,6 @@
 		D33CE81B1B7A9F8200928127 /* SavedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80C1B7A9F8200928127 /* SavedTableViewController.swift */; };
 		D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80D1B7A9F8200928127 /* Utilities.swift */; };
 		D33CE8201B7A9FDB00928127 /* PocketMemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */; };
-		D33CE8261B7AA03900928127 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33CE8251B7AA03900928127 /* Info.plist */; };
 		D34DA7701B7D3B6500BDF49D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D34DA76E1B7D3B6500BDF49D /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -189,7 +188,7 @@
 			attributes = {
 				LastSwiftMigration = 0710;
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "truckin'";
 				TargetAttributes = {
 					D3052D161B50FE39002449D8 = {
@@ -234,7 +233,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D33CE8261B7AA03900928127 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +317,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -388,6 +387,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PocketMeme/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ch.truckin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PocketMeme;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -400,6 +400,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PocketMeme/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ch.truckin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PocketMeme;
 			};
 			name = Release;
@@ -418,6 +419,7 @@
 				);
 				INFOPLIST_FILE = PocketMemeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ch.truckin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PocketMemeTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketMeme.app/PocketMeme";
 			};
@@ -433,6 +435,7 @@
 				);
 				INFOPLIST_FILE = PocketMemeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ch.truckin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PocketMemeTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketMeme.app/PocketMeme";
 			};
