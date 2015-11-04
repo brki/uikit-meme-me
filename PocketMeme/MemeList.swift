@@ -35,33 +35,26 @@ class MemeList {
 	Load the persisted Memes into memory from storage.
     */
 	init() {
-		let url = dataURL
-		if NSFileManager.defaultManager().fileExistsAtPath(url.path!) {
-			if let data = NSData(contentsOfURL: url) {
-				let decoder = NSKeyedUnarchiver(forReadingWithData: data)
-				let count = decoder.decodeIntForKey("listCount")
-				for _ in 0 ..< count {
-					if let memeInfo = decoder.decodeObject() as? Meme {
-						list.append(memeInfo)
-					}
-				}
-			}
+		guard let dataStorePath = dataURL.path where NSFileManager.defaultManager().fileExistsAtPath(dataStorePath) else {
+			print("No persisted data to load")
+			return
 		}
+		guard let unarchivedList = NSKeyedUnarchiver.unarchiveObjectWithFile(dataStorePath) as? [Meme] else {
+			print("Unable to unarchive data in expected form")
+			return
+		}
+		list = unarchivedList
 	}
 
 	/**
 	Persists the in-memory list of Memes to storage.
 	*/
 	func persist() {
-		let dataUrl = dataURL
-		let data = NSMutableData()
-		let coder = NSKeyedArchiver(forWritingWithMutableData: data)
-		coder.encodeInteger(list.count, forKey: "listCount")
-		for meme in list {
-			coder.encodeObject(meme)
+		guard let dataStorePath = dataURL.path else {
+			print("Unable to get data store path")
+			return
 		}
-		coder.finishEncoding()
-		data.writeToURL(dataUrl, atomically: true)
+		NSKeyedArchiver.archiveRootObject(list, toFile: dataStorePath)
 	}
 
 	/**
