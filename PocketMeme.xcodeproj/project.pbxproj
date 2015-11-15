@@ -22,6 +22,8 @@
 		D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE80D1B7A9F8200928127 /* Utilities.swift */; };
 		D33CE8201B7A9FDB00928127 /* PocketMemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CE81F1B7A9FDB00928127 /* PocketMemeTests.swift */; };
 		D34DA7701B7D3B6500BDF49D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D34DA76E1B7D3B6500BDF49D /* Main.storyboard */; };
+		D38823731BF8B55200285E6F /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D38823711BF8B55200285E6F /* Model.xcdatamodeld */; };
+		D38823961BF8BF3000285E6F /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38823951BF8BF3000285E6F /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		D33CE8251B7AA03900928127 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PocketMemeTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		D33CE82B1B7AA0C900928127 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = PocketMeme/Base.lproj/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
 		D34DA76F1B7D3B6500BDF49D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D38823721BF8B55200285E6F /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		D38823951BF8BF3000285E6F /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +101,9 @@
 			isa = PBXGroup;
 			children = (
 				D34DA76E1B7D3B6500BDF49D /* Main.storyboard */,
+				D38823711BF8B55200285E6F /* Model.xcdatamodeld */,
 				D33CE7FF1B7A9F8200928127 /* AppDelegate.swift */,
+				D38823951BF8BF3000285E6F /* CoreDataStack.swift */,
 				D33CE8011B7A9F8200928127 /* Constants.swift */,
 				D33CE80D1B7A9F8200928127 /* Utilities.swift */,
 				D388236D1BF8B40400285E6F /* ViewControllers */,
@@ -282,10 +288,12 @@
 				D33CE80E1B7A9F8200928127 /* AppDelegate.swift in Sources */,
 				D33CE81A1B7A9F8200928127 /* SavedCollectionViewController.swift in Sources */,
 				D33CE81C1B7A9F8200928127 /* Utilities.swift in Sources */,
+				D38823961BF8BF3000285E6F /* CoreDataStack.swift in Sources */,
 				D33CE8101B7A9F8200928127 /* Constants.swift in Sources */,
 				D33CE8161B7A9F8200928127 /* Meme.swift in Sources */,
 				D33CE8171B7A9F8200928127 /* MemeCollectionViewCell.swift in Sources */,
 				D33CE8131B7A9F8200928127 /* extension-UIImage.swift in Sources */,
+				D38823731BF8B55200285E6F /* Model.xcdatamodeld in Sources */,
 				D33CE8121B7A9F8200928127 /* EditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -504,6 +512,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D38823711BF8B55200285E6F /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D38823721BF8B55200285E6F /* Model.xcdatamodel */,
+			);
+			currentVersion = D38823721BF8B55200285E6F /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D3052D0F1B50FE39002449D8 /* Project object */;
 }

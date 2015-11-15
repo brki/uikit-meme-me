@@ -25,6 +25,7 @@ class SavedCollectionViewController: UIViewController, UICollectionViewDataSourc
 	}
 
 	override func viewWillAppear(animated: Bool) {
+		memeList.loadMemes()
 		collectionView.reloadData()
 		self.tabBarController!.tabBar.hidden = false
 		super.viewWillAppear(animated)

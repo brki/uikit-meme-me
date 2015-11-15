@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
@@ -34,6 +35,13 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	var isRotating = false
 	var currentCanvasVerticalOffset: CGFloat = 0  // Keeps track of the canvas constraint offset, to see if the constraints need to be changed when KB size notifications handled.
 
+    let permanentContext = CoreDataStack.sharedInstance.managedObjectContext
+    lazy var temporaryContext: NSManagedObjectContext = {
+        let tempContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        tempContext.parentContext = CoreDataStack.sharedInstance.managedObjectContext
+        return tempContext
+    }()
+    
 	// Whether or not the meme has been changed since creation or last save:
 	var dirtyMeme = false {
 		didSet(oldValue) {
@@ -42,6 +50,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 			}
 		}
 	}
+
+	// MARK: VC lifecycle: 
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,18 +77,26 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		super.viewWillAppear(animated)
 
 		if isPresentingExistingMeme {
-			if let meme = meme {
+			if let passedInMeme = meme {
 				// If a transition image (shown during VC-switching animation) was provided by the pushing VC, show it.
+				do {
+					meme = try temporaryContext.existingObjectWithID(passedInMeme.objectID) as? Meme
+				} catch let error as NSError {
+					print("Unable to get meme from parent context in child context: \(error)")
+				}
+				guard let workMeme = meme else {
+					return
+				}
 				if let image = memeTransitionImage {
 					imageView.image = image
 					memeTransitionImage = nil
 				}
-				topText.text = meme.topText
-				bottomText.text = meme.bottomText
+				topText.text = workMeme.topText
+				bottomText.text = workMeme.bottomText
 			}
 		} else {
 			if meme == nil {
-				meme = Meme(id: nil, topText: topText.text ?? "", bottomText: bottomText.text ?? "")
+                meme = Meme(id: nil, topText: topText.text ?? "", bottomText: bottomText.text ?? "", managedObjectContext: temporaryContext)
 			}
 		}
 		cancelButton.enabled = dirtyMeme
@@ -88,7 +106,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		// Hide the text fields during the animation, they will be shown if needed in viewDidAppear.
 		setTextFieldsHidden(true)
     }
-
+    
 	/**
 	Set the image from the meme, if presenting an existing meme.  If applicable, set the text field constraints.
 	*/
@@ -97,7 +115,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if isPresentingExistingMeme {
 			isPresentingExistingMeme = false
 			if let meme = meme {
-				if let image = meme.image(.Source, fromStorageArea: .Permanent) {
+				if let image = meme.image(.Source) {
 					imageView.image = image
 				}
 			}
@@ -108,7 +126,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 	/**
-	Method called from the MemeNavigationController before this view controller is popped of the stack.
+	Method called from the MemeNavigationController before this view controller is popped off the stack.
 	
 	At this point, it's still possible to update the on-screen views before taking a snapshot of the
 	view hierarchy.
@@ -117,7 +135,6 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if saveOnExit && dirtyMeme, let meme = meme {
 			persistMemeWithImage(meme, image: nil)
 		}
-		meme?.cleanTempStorage()
 	}
 
 	/**
@@ -150,6 +167,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		})
 	}
 
+	// MARK: Storyboard actions
+
 	/**
 	Pick an image from the photo album.
 	*/
@@ -181,7 +200,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		if dirtyMeme {
 			shareMemeImage = memeAsImage()
 		} else {
-			shareMemeImage = meme!.image(.Meme, fromStorageArea: .Permanent)
+			shareMemeImage = meme!.image(.Meme)
 		}
 		if let memeImage = shareMemeImage {
 			let activityVC = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
@@ -269,24 +288,32 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	If no image is provided, an image is generated from the current imageView and text fields.
 	*/
 	func persistMemeWithImage(meme: Meme, image: UIImage? = nil) {
-		updateMemeWithCurrentState(image)
-		meme.moveToPermanentStorage()
-		MemeList.sharedInstance.saveMeme(meme)
-		dirtyMeme = false
-	}
-
-	/**
-	Updates the meme with the current text and meme image.
-	*/
-	func updateMemeWithCurrentState(var memeImage: UIImage?) {
-		if memeImage == nil {
-			memeImage = memeAsImage()
-		}
-		if dirtyMeme, let meme = meme, let image = memeImage {
-			meme.topText = topText.text ?? ""
-			meme.bottomText = bottomText.text ?? ""
-			meme.persistMemeImage(image, toStorageArea: .Temporary)
-		}
+        
+        let memeImage = image ?? memeAsImage()
+        if dirtyMeme, let image = memeImage {
+            meme.topText = topText.text ?? ""
+            meme.bottomText = bottomText.text ?? ""
+            meme.setImage(image, forType:Meme.ImageType.Meme)
+            meme.generateThumbnails(image)
+        }
+		// TODO: move this somewhere else: Meme?  MemeList?:
+        var pushedToParentContext = false
+        temporaryContext.performBlockAndWait {
+            do {
+                try self.temporaryContext.save()
+                pushedToParentContext = true
+            } catch let error as NSError {
+                print("Error saving child context in persistMemeWithImage(): \(error)")
+            }
+        }
+        guard pushedToParentContext else {
+            return
+        }
+        
+        permanentContext.performBlockAndWait {
+            CoreDataStack.sharedInstance.saveContext()
+        }
+        dirtyMeme = false
 	}
 
 	/**
@@ -327,11 +354,10 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	*/
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, meme = meme {
-			imageView.image = image
-			let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
-			dispatch_async(backgroundQueue, {
-				meme.persistOriginalImage(image, toStorageArea: .Temporary)
-			})
+			imageView.image = image            
+            temporaryContext.performBlockAndWait {
+                meme.setImage(image, forType:Meme.ImageType.Source)
+            }
 			setTextFieldsConstraints()
 			dirtyMeme = true
         }

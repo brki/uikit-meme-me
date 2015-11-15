@@ -31,6 +31,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 
 	override func viewWillAppear(animated: Bool) {
 		self.tabBarController!.tabBar.hidden = false
+		memeList.loadMemes()
 		tableView.reloadData()
 		super.viewWillAppear(animated)
 	}
@@ -76,7 +77,7 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		let cell = tableView.dequeueReusableCellWithIdentifier("savedMeme")!
 		let meme = memeList[indexPath.row]
 		if let imageView = cell.contentView.viewWithTag(TableCellTag.imageView.rawValue) as? UIImageView {
-			imageView.image = meme.image(Meme.ResourceType.MemeThumbnailSmall)
+			imageView.image = meme.image(Meme.ImageType.MemeThumbnailSmall)
 		}
 		if let topText = cell.contentView.viewWithTag(TableCellTag.topText.rawValue) as? UILabel {
 			topText.text = meme.topText

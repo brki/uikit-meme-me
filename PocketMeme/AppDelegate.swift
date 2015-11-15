@@ -11,7 +11,7 @@
 /**
 This app was only designed for / tested on iPhone, not iPad.
 
-* The app saves the memes to permanent storage.
+* The app saves the memes to permanent storage using CoreData.
 
 * From the meme editor, if you press the back button, the meme is saved.
   In order to be able to get the meme image at this point in time, a custom
@@ -31,11 +31,6 @@ This app was only designed for / tested on iPhone, not iPad.
   there is no need to load / scale down the full-sized Meme images in order
   to display the table and collection views.
 
-* Cache is used in an effort to keep the images in memory.
-
-* The editor is rotateable with a keyboard present (perhaps isn't too special,
-  but took a lot of time to get it to work).
-
 */
 
 
@@ -47,51 +42,5 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-	func applicationDidReceiveMemoryWarning(application: UIApplication) {
-		clearCache()
-	}
-
-	func applicationDidEnterBackground(application: UIApplication) {
-		clearCache()
-	}
-
-	func clearCache() {
-		Meme.cache.removeAllObjects()
-	}
-
-	func applicationWillTerminate(application: UIApplication) {
-		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-		cleanTemporaryDirectory()
-	}
-
-	/**
-	Cleans all files / directories out of this app's tmp directory.
-	*/
-	func cleanTemporaryDirectory() {
-		let fileManager = NSFileManager.defaultManager()
-		var error: NSError?
-		let tempResources: [AnyObject]?
-		do {
-			tempResources = try fileManager.contentsOfDirectoryAtURL(tmpDirectoryURL(), includingPropertiesForKeys: [], options: [])
-		} catch let error1 as NSError {
-			error = error1
-			tempResources = nil
-		}
-		if error != nil{
-			print("Unable to get list of resources in temp dir")
-			return
-		}
-		for url in tempResources as! [NSURL] {
-			do {
-				try fileManager.removeItemAtURL(url)
-			} catch let error1 as NSError {
-				error = error1
-			}
-			if error != nil {
-				print("Error removing resource from temp dir with url: \(url)")
-			}
-		}
-	}
 }
 
