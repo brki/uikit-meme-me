@@ -44,9 +44,13 @@ class SavedTableViewController: UIViewController, UITableViewDelegate, UITableVi
 		if let identifier = segue.identifier {
 			if identifier == "detailFromTableView" {
 				let detailVC = segue.destinationViewController as! DetailViewController
+				detailVC.mainObjectContext = memeList.sharedContext
 				if let path = tableView.indexPathForSelectedRow {
 					detailVC.meme = memeList[path.row]
 				}
+			} else if identifier == "fromListToEditor" {
+				let editorVC = segue.destinationViewController as! EditorViewController
+				editorVC.mainObjectContext = memeList.sharedContext
 			}
 		}
 	}

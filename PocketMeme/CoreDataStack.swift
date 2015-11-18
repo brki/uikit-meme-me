@@ -52,10 +52,16 @@ class CoreDataStack {
     lazy var managedObjectContext: NSManagedObjectContext = {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
+
+	lazy var mainManagedObjectContext: NSManagedObjectContext = {
+		let mainContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+		mainContext.parentContext = self.managedObjectContext
+		return mainContext
+	}()
     
     // MARK: - Core Data Saving support
     

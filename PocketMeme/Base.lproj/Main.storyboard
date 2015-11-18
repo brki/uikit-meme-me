@@ -411,7 +411,7 @@
         <image name="TableList" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Feq-k0-hEw"/>
         <segue reference="VL7-WY-Bk4"/>
+        <segue reference="Feq-k0-hEw"/>
     </inferredMetricsTieBreakers>
 </document>

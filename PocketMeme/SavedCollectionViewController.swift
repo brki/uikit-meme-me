@@ -39,10 +39,14 @@ class SavedCollectionViewController: UIViewController, UICollectionViewDataSourc
 		if let identifier = segue.identifier {
 			if identifier == "detailFromCollectionView" {
 				let detailVC = segue.destinationViewController as! DetailViewController
+				detailVC.mainObjectContext = memeList.sharedContext
 				if let indexPath = selectedIndexPath {
 					detailVC.meme = memeList[indexPath.item]
 				}
 				selectedIndexPath = nil
+			}  else if identifier == "fromCollectionToEditor" {
+				let editorVC = segue.destinationViewController as! EditorViewController
+				editorVC.mainObjectContext = memeList.sharedContext
 			}
 		}
 	}

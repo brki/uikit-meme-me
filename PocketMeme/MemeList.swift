@@ -15,7 +15,7 @@ class MemeList {
 	static let sharedInstance = MemeList()
     
     var list = [Meme]()
-    let sharedContext = CoreDataStack.sharedInstance.managedObjectContext
+	let sharedContext = CoreDataStack.sharedInstance.mainManagedObjectContext
 
 	// Convenience subscript access to underlying list.
 	subscript(index: Int) -> Meme {
@@ -57,9 +57,28 @@ class MemeList {
      */
     func removeMemeAtIndex(index: Int) {
         let meme = list.removeAtIndex(index)
+
 		sharedContext.performBlockAndWait {
 			self.sharedContext.deleteObject(meme)
-			CoreDataStack.sharedInstance.saveContext()
+			do {
+				// Push changes to parent context
+				try self.sharedContext.save()
+				guard let backgroundContext = self.sharedContext.parentContext else {
+					print("Unable to get parent context")
+					return
+				}
+				backgroundContext.performBlock {
+					do {
+						try backgroundContext.save()
+					} catch let error as NSError {
+						// TODO: better handling
+						print("Error saving to persistent store: \(error)")
+					}
+				}
+			} catch let error as NSError {
+				// TODO: better handling
+				print("Error saving in main context after deleting: \(error)")
+			}
 		}
     }
 

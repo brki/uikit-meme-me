@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController {
 
@@ -15,6 +16,7 @@ class DetailViewController: UIViewController {
 	@IBOutlet weak var trashButton: UIBarButtonItem!
 
 	var meme: Meme?
+	var mainObjectContext: NSManagedObjectContext!
 
 	override func viewDidLoad() {
 		navigationItem.rightBarButtonItems = [trashButton, editButton]
@@ -48,6 +50,7 @@ class DetailViewController: UIViewController {
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		if let id = segue.identifier where id == "toEditorFromDetail" {
 			let editorVC = segue.destinationViewController as! EditorViewController
+			editorVC.mainObjectContext = mainObjectContext
 			editorVC.isPresentingExistingMeme = true
 			editorVC.memeTransitionImage = meme?.image(.Source)
 			editorVC.meme = meme
