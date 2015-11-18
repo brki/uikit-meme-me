@@ -59,11 +59,17 @@ class  Meme: NSManagedObject {
         case .MemeThumbnailLarge:
             data = thumbnailLarge
         }
-        return UIImage(data: data)
+		return UIImage(data: data)
 	}
-    
+
+	/**
+	Sets the underlying NSData image attribute with the JPEG data representation of the provided UIImage.
+
+	JPEG is used instead of PNG because UIImageJPEGRepresentation preserves the image orientation information,
+	whereas UIImagePNGRepresentation does not.
+	*/
     func setImage(image: UIImage, forType type: ImageType) {
-        guard let data = UIImagePNGRepresentation(image) else {
+        guard let data = UIImageJPEGRepresentation(image, 0.9) else {
             print("Unable to get NSData representation of passed image")
             return
         }
