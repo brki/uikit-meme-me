@@ -12,7 +12,7 @@ public extension UIImage {
 
 	/**
 	Crop the image, preserving it's orientation.
-	
+
 	Based on http://stackoverflow.com/a/8443937/948341
 	*/
 	func crop(aRect: CGRect, screenScale: CGFloat) -> UIImage? {

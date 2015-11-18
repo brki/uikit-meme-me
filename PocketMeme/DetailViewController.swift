@@ -56,5 +56,5 @@ class DetailViewController: UIViewController {
 			editorVC.meme = meme
 		}
 	}
-
+	
 }

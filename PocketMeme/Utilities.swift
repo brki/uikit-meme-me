@@ -9,7 +9,7 @@
 import Foundation
 
 func documentDirectoryURL() -> NSURL {
-	let directories = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask) 
+	let directories = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
 	return directories.last!
 }
 

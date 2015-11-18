@@ -11,11 +11,11 @@ import CoreData
 
 class EditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var photoButton: UIBarButtonItem!
-    @IBOutlet weak var topText: UITextField!
+	@IBOutlet weak var imageView: UIImageView!
+	@IBOutlet weak var photoButton: UIBarButtonItem!
+	@IBOutlet weak var topText: UITextField!
 	@IBOutlet weak var bottomText: UITextField!
-    @IBOutlet weak var memeCanvas: UIView!
+	@IBOutlet weak var memeCanvas: UIView!
 	@IBOutlet weak var shareButton: UIBarButtonItem!
 	@IBOutlet weak var cancelButton: UIBarButtonItem!
 	@IBOutlet weak var bottomToolbar: UIToolbar!
@@ -47,18 +47,18 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		}
 	}
 
-	// MARK: VC lifecycle: 
+	// MARK: VC lifecycle:
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        photoButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
-        topText.delegate = self
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		photoButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
+		topText.delegate = self
 		bottomText.delegate = self
-        setDefaultTextAttributes()
+		setDefaultTextAttributes()
 
-        let notificationCenter = NSNotificationCenter.defaultCenter()
+		let notificationCenter = NSNotificationCenter.defaultCenter()
 		notificationCenter.addObserver(self, selector: "keyboardSizeChanging:", name: UIKeyboardWillChangeFrameNotification, object: nil)
-    }
+	}
 
 	deinit {
 		NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -69,7 +69,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	If not already present, initialize self.meme.
 	*/
-    override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
 		if isPresentingExistingMeme {
@@ -84,7 +84,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		} else {
 			if meme == nil {
 				isNewMeme = true
-                meme = Meme(id: nil, topText: topText.text ?? "", bottomText: bottomText.text ?? "", managedObjectContext: mainObjectContext)
+				meme = Meme(id: nil, topText: topText.text ?? "", bottomText: bottomText.text ?? "", managedObjectContext: mainObjectContext)
 			}
 		}
 		cancelButton.enabled = dirtyMeme
@@ -93,8 +93,8 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 		// Hide the text fields during the animation, they will be shown if needed in viewDidAppear.
 		setTextFieldsHidden(true)
-    }
-    
+	}
+
 	/**
 	Set the image from the meme, if presenting an existing meme.  If applicable, set the text field constraints.
 	*/
@@ -115,7 +115,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	Method called from the MemeNavigationController before this view controller is popped off the stack.
-	
+
 	At this point, it's still possible to update the on-screen views before taking a snapshot of the
 	view hierarchy.
 	*/
@@ -133,14 +133,14 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	When the screen orientation changes:
-		* hide text fields before rotation (because their animation is ugly)
-		* after rotation, if an image is present:
-			* adjust the text field constraints
-			* show text fields again
+	* hide text fields before rotation (because their animation is ugly)
+	* after rotation, if an image is present:
+	* adjust the text field constraints
+	* show text fields again
 
 	There's an interesting post that explains how to make this all work even more smoothly,
 	but it seems like quite a bit of work, and might change with the next ios version:
-		* http://smnh.me/synchronizing-rotation-animation-between-the-keyboard-and-the-attached-view-part-2/
+	* http://smnh.me/synchronizing-rotation-animation-between-the-keyboard-and-the-attached-view-part-2/
 	*/
 	override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
@@ -185,7 +185,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	Presents an activity view controller.
-	
+
 	If the activity view controller was not cancelled by the user, pop back to the navigation controller's root.
 	*/
 	@IBAction func shareMeme(sender: UIBarButtonItem) {
@@ -275,25 +275,25 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		memeTextAttributes[NSObliquenessAttributeName] = 0.1
 		self.topText.defaultTextAttributes = memeTextAttributes
 		self.bottomText.defaultTextAttributes = memeTextAttributes
-    }
+	}
 
 	/**
 	Persists the meme and all it's images to permanent storage.
 	If no image is provided, an image is generated from the current imageView and text fields.
 	*/
 	func persistMemeWithImage(meme: Meme, image: UIImage? = nil) {
-        
-        let memeImage = image ?? memeAsImage()
-        if dirtyMeme, let image = memeImage {
-            meme.topText = topText.text ?? ""
-            meme.bottomText = bottomText.text ?? ""
-            meme.setImage(image, forType:Meme.ImageType.Meme)
-            meme.generateThumbnails(image)
-        }
+
+		let memeImage = image ?? memeAsImage()
+		if dirtyMeme, let image = memeImage {
+			meme.topText = topText.text ?? ""
+			meme.bottomText = bottomText.text ?? ""
+			meme.setImage(image, forType:Meme.ImageType.Meme)
+			meme.generateThumbnails(image)
+		}
 		// TODO: perhaps move this somewhere else: Meme?  MemeList?:
-        mainObjectContext.performBlockAndWait {
-            do {
-                try self.mainObjectContext.save()
+		mainObjectContext.performBlockAndWait {
+			do {
+				try self.mainObjectContext.save()
 				guard let context = self.mainObjectContext.parentContext else {
 					print("Not able to get parent context when saving")
 					return
@@ -305,11 +305,11 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 						print("Error persisting to permanent store when saving: \(error)")
 					}
 				}
-            } catch let error as NSError {
-                print("Error saving child context in persistMemeWithImage(): \(error)")
-            }
-        }
-        dirtyMeme = false
+			} catch let error as NSError {
+				print("Error saving child context in persistMemeWithImage(): \(error)")
+			}
+		}
+		dirtyMeme = false
 	}
 
 	/**
@@ -345,32 +345,32 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	When an image has been picked, set the imageView image and adjust text field constraints.
-	
+
 	Save the picked image to persistent storage, using a background thread so that the UI is not blocked waiting for that.
 	*/
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, meme = meme {
-			imageView.image = image            
-            mainObjectContext.performBlockAndWait {
-                meme.setImage(image, forType:Meme.ImageType.Source)
-            }
+	func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+		if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, meme = meme {
+			imageView.image = image
+			mainObjectContext.performBlockAndWait {
+				meme.setImage(image, forType:Meme.ImageType.Source)
+			}
 			setTextFieldsConstraints()
 			dirtyMeme = true
-        }
-        dismissViewControllerAnimated(true, completion: nil)
-    }
+		}
+		dismissViewControllerAnimated(true, completion: nil)
+	}
 
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
+	func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+		dismissViewControllerAnimated(true, completion: nil)
+	}
 
 
-    // MARK: UITextFieldDelegate methods:
+	// MARK: UITextFieldDelegate methods:
 
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+		return true
+	}
 
 	func textFieldDidEndEditing(textField: UITextField) {
 		if activeTextField == textField {
@@ -378,15 +378,15 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 		}
 	}
 
-    func textFieldDidBeginEditing(textField: UITextField) {
-        activeTextField = textField
+	func textFieldDidBeginEditing(textField: UITextField) {
+		activeTextField = textField
 
 		// Clear the text if it's still the default text:
 		if (textField == topText && textField.text == "TOP") || (textField == bottomText && textField.text == "BOTTOM") {
 			textField.text = ""
 			dirtyMeme = true
 		}
-    }
+	}
 
 	func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
 		dirtyMeme = true
@@ -394,7 +394,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 	}
 
 
-    // MARK: Keyboard notification handlers:
+	// MARK: Keyboard notification handlers:
 
 	func keyboardSizeChanging(notification: NSNotification) {
 		if isRotating {
@@ -414,7 +414,7 @@ class EditorViewController: UIViewController, UIImagePickerControllerDelegate, U
 
 	/**
 	If necessary, repositions the memeCanvas view so that the currently active text field is visible.
-	
+
 	After rotation, the text field's frame will not be correct unless it's constraints have been updated, and self.view's constraints
 	and layout have been updated (see viewWillTransitionToSize() implementation).
 	*/

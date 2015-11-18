@@ -13,8 +13,8 @@ Used to manage saving and deleting memes from permanent storage.
 */
 class MemeList {
 	static let sharedInstance = MemeList()
-    
-    var list = [Meme]()
+
+	var list = [Meme]()
 	let sharedContext = CoreDataStack.sharedInstance.mainManagedObjectContext
 
 	// Convenience subscript access to underlying list.
@@ -24,7 +24,7 @@ class MemeList {
 
 	/**
 	Load the persisted Memes into memory from storage.
-    */
+	*/
 	init() {
 		loadMemes()
 	}
@@ -43,7 +43,7 @@ class MemeList {
 
 	/**
 	Remove the given meme from persistent storage.
-    */
+	*/
 	func removeMeme(meme: Meme) {
 		guard let index = indexOfMeme(meme) else {
 			print("removeMeme called, but meme not found in list")
@@ -51,12 +51,12 @@ class MemeList {
 		}
 		removeMemeAtIndex(index)
 	}
-    
-    /**
-     Remove the meme at the given index from persistent storage.
-     */
-    func removeMemeAtIndex(index: Int) {
-        let meme = list.removeAtIndex(index)
+
+	/**
+	Remove the meme at the given index from persistent storage.
+	*/
+	func removeMemeAtIndex(index: Int) {
+		let meme = list.removeAtIndex(index)
 
 		sharedContext.performBlockAndWait {
 			self.sharedContext.deleteObject(meme)
@@ -80,7 +80,7 @@ class MemeList {
 				print("Error saving in main context after deleting: \(error)")
 			}
 		}
-    }
+	}
 
 	/**
 	Find the index in self.list of the given meme.
